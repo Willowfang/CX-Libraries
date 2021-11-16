@@ -1,0 +1,307 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CodeX-PdfLib</name>
+    </assembly>
+    <members>
+        <member name="M:CX.PdfLib.Extensions.BookmarkExtensions.StartPage(CX.PdfLib.Services.Data.IBookmark)">
+            <summary>
+            Return bookmark start page (ie. destination)
+            </summary>
+            <param name="bookmark"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CX.PdfLib.Extensions.BookmarkExtensions.EndPage(CX.PdfLib.Services.Data.IBookmark)">
+            <summary>
+            Return the end page of bookmark's range
+            </summary>
+            <param name="bookmark"></param>
+            <returns></returns>
+        </member>
+        <member name="M:CX.PdfLib.Extensions.BookmarkExtensions.AdjustLevels(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.Int32)">
+            <summary>
+            Adjust the level of all bookmarks in an <see cref="T:System.Collections.Generic.IList`1"/>.
+            </summary>
+            <param name="originals"></param>
+            <param name="adjustment">Amount to adjust (positive or negative)</param>
+            <remarks>Bookmark level cannot be lower than 1. Bookmarks will be adjusted
+            to level 1, if adjustment would bring it lower. This can be used to level all
+            bookmarks to level 1.</remarks>
+            <returns></returns>
+        </member>
+        <member name="M:CX.PdfLib.Implementation.Bookmarker.FindBookmarks(System.String)">
+            <summary>
+            Get all bookmarks from a document
+            </summary>
+            <param name="sourcePdf">Source document path</param>
+            <returns></returns>
+        </member>
+        <member name="M:CX.PdfLib.Implementation.Bookmarker.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
+            <summary>
+            Add bookmarks to a document
+            </summary>
+            <param name="bookmarks">Bookmarks to add</param>
+            <param name="documentPath">Destination document path</param>
+        </member>
+        <member name="T:CX.PdfLib.Implementation.ConverterWord">
+            <summary>
+            Implementation of <see cref="T:CX.PdfLib.Services.IConverter"/> service
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.Implementation.Data.Bookmark">
+            <summary>
+            Base class for bookmarks
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Implementation.Data.Bookmark.Title">
+            <summary>
+            The title of the bookmark
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Implementation.Data.Bookmark.Pages">
+            <summary>
+            Number of the page where the bookmarks starts at
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.Implementation.Data.LeveledBookmark">
+            <summary>
+            A class for bookmarks categorised by their level
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Implementation.Data.LeveledBookmark.Level">
+            <summary>
+            Level of the bookmark in the bookmark tree (1 leftmost)
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Implementation.Data.LeveledBookmark.#ctor(System.Int32,System.String,System.Collections.Generic.IList{System.Int32})">
+            <summary>
+            Create info on leveled bookmark
+            </summary>
+            <param name="level">Bookmark level in the bookmark tree</param>
+            <param name="title">Title of the bookmark</param>
+            <param name="pages">Pages contained in the bookmark</param>
+        </member>
+        <member name="T:CX.PdfLib.Implementation.Data.MergeInput">
+            <summary>
+            Default implementation for <see cref="T:CX.PdfLib.Services.Data.IMergeInput"/>
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.Implementation.Extractor">
+            <summary>
+            Implementation of <see cref="T:CX.PdfLib.Services.IExtractor"/> service
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Implementation.Extractor.GetService">
+            <summary>
+            Get new instance as service
+            </summary>
+            <returns>IExtractor service</returns>
+        </member>
+        <member name="M:CX.PdfLib.Implementation.Extractor.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.IExtractRange})">
+            <summary>
+            Preserves original document bookmarks
+            </summary>
+            <param name="sourceFile"></param>
+            <param name="destFile"></param>
+            <param name="ranges"></param>
+        </member>
+        <member name="T:CX.PdfLib.Implementation.Signer">
+            <summary>
+            Default implementation for ISigner service
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.Services.Data.IBookmark">
+            <summary>
+            Generic bookmark service
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IBookmark.Title">
+            <summary>
+            Name of the bookmark
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IBookmark.Pages">
+            <summary>
+            Pages contained in the bookmark
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.Services.Data.IExtractRange">
+            <summary>
+            A page range in a document set for extraction
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IExtractRange.Name">
+            <summary>
+            Name of the range to extract (without extension)
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IExtractRange.Pages">
+            <summary>
+            Pages to extract
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.Services.Data.ILeveledBookmark">
+            <summary>
+            A bookmark in a tree hierarchy
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.ILeveledBookmark.Level">
+            <summary>
+            Level in the tree
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.Services.Data.IMergeInput">
+            <summary>
+            Info on a file or title to be used in a document merge
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IMergeInput.FilePath">
+            <summary>
+            Path to the file to merge. Null, if just a title.
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IMergeInput.Title">
+            <summary>
+            Title of the bookmark to add
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IMergeInput.Level">
+            <summary>
+            Level of the bookmark in the bookmark tree
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.Services.Data.IPdfFile">
+            <summary>
+            Information of a file in pdf-format
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IPdfFile.Title">
+            <summary>
+            Title of the file
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IPdfFile.FilePath">
+            <summary>
+            Path to the file
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IPdfFile.IsSelected">
+            <summary>
+            True, if the file has been selected
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.IBookmarker.FindBookmarks(System.String)">
+            <summary>
+            Get leveled bookmarks from a document
+            </summary>
+            <param name="sourcePdf">Document to get the bookmarks from</param>
+            <returns>A list of bookmarks</returns>
+        </member>
+        <member name="M:CX.PdfLib.Services.IBookmarker.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
+            <summary>
+            Add leveled bookmarks for a document
+            </summary>
+            <param name="bookmarks">Bookmarks to add</param>
+            <param name="documentPath">The pdf to add the bookmarks to</param>
+        </member>
+        <member name="T:CX.PdfLib.Services.IConverter">
+            <summary>
+            Convert files to pdf
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.IConverter.Convert(System.String,System.String)">
+            <summary>
+            Convert a single document
+            </summary>
+            <param name="filePath">Path to the document to convert</param>
+            <param name="outputDirectory">Directory to save document in</param>
+            <returns>Path to the converted document</returns>
+            <remarks>The newly created document will be saved with the same name as the
+            original file (with extension .pdf)</remarks>
+        </member>
+        <member name="M:CX.PdfLib.Services.IConverter.Convert(System.Collections.Generic.IList{System.String},System.String)">
+            <summary>
+            Convert multiple documents
+            </summary>
+            <param name="filePaths">Documents to convert</param>
+            <param name="outputDirectory">Directory to save the documents in</param>
+            <returns>Paths to converted documents</returns>
+            // <remarks>Newly created documents will be saved with the same name as the
+            original files (with extension .pdf)</remarks>
+        </member>
+        <member name="T:CX.PdfLib.Services.IExtractor">
+            <summary>
+            Extract pages from a pdf
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.IExtractRange})">
+            <summary>
+            Extract multiple page ranges into separate files
+            </summary>
+            <param name="sourceFile">Path of the file to extract from</param>
+            <param name="destDirectory">Directory to extract the files to</param>
+            <param name="ranges">Ranges to extract</param>
+        </member>
+        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.IExtractRange})">
+            <summary>
+            Extract multiple page ranges into one file
+            </summary>
+            <param name="sourceFile">File to extract from</param>
+            <param name="destFile">File to extract into</param>
+            <param name="ranges">Page ranges to extract</param>
+        </member>
+        <member name="M:CX.PdfLib.Services.IManipulator.MergeWithBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.IMergeInput},System.String)">
+            <summary>
+            Merge documents into one pdf. Create top-level bookmarks for merged
+            files and assign them given titles. Retain all bookmarks from original documents
+            with adjusted destination pages.
+            </summary>
+            <param name="inputs">Inputs for the merge, includes merging files
+            and titles</param>
+            <param name="outputPath">Output file path</param>
+        </member>
+        <member name="T:CX.PdfLib.Services.IMerger">
+            <summary>
+            Service for merging pdf-files into one
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.IMerger.Merge(System.Collections.Generic.IList{System.String},System.String)">
+            <summary>
+            Merge pdf documents into one document
+            </summary>
+            <param name="sourcePaths">Source files in order of merging</param>
+            <param name="outputPath">Output file path</param>
+            <returns>Merged documents' start pages in the new document</returns>
+        </member>
+        <member name="T:CX.PdfLib.Services.ISigner">
+            <summary>
+            Service for manipulating digital signatures
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.ISigner.RemoveSignature(System.String,System.IO.DirectoryInfo,System.String)">
+            <summary>
+            Remove digital signatures from a document. Output file will be saved in the given directory
+            with its name formatted as: <paramref name="sourcePath"/>_<paramref name="postFix"/>.pdf
+            </summary>
+            <param name="sourcePath">Path of the source file</param>
+            <param name="destinationDirectory">Directory to save the new file in</param>
+            <param name="postFix">Postfix for the new file name</param>
+        </member>
+        <member name="M:CX.PdfLib.Services.ISigner.RemoveSignature(System.String,System.IO.FileInfo)">
+            <summary>
+            Remove digital signatures from a document.
+            </summary>
+            <param name="sourcePath">Path of the source file</param>
+            <param name="outputFile">Output file</param>
+        </member>
+        <member name="M:CX.PdfLib.Services.ISigner.RemoveSignature(System.String[],System.IO.DirectoryInfo,System.String)">
+            <summary>
+            Remove digital signatures from multiple documents. Output files will be saved in the given directory
+            with their names formatted as: <paramref name="sourcePaths"/>_<paramref name="postFix"/>.pdf
+            </summary>
+            <param name="sourcePaths">Paths of the source files</param>
+            <param name="destinationDirectory">Directory to save the new files in</param>
+            <param name="postFix">Postfix for new file names</param>
+        </member>
+    </members>
+</doc>
