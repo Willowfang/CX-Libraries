@@ -23,15 +23,23 @@ namespace CX.PdfLib.Implementation
         {
             return FindLeveledBookmarks(new PdfDocument(new PdfReader(sourcePdf)));
         }
+        /// <summary>
+        /// Find and return bookmarks with their levels
+        /// </summary>
+        /// <param name="sourceDoc">Document to search</param>
+        /// <returns>A list of leveled bookmarks</returns>
         internal static IList<ILeveledBookmark> FindLeveledBookmarks(PdfDocument sourceDoc)
         {
+            // Get source document outlines (bookmarks) and a tree of destinations in the document
             PdfNameTree destTree = sourceDoc.GetCatalog().GetNameTree(PdfName.Dests);
             PdfOutline outlines = sourceDoc.GetOutlines(false);
 
+            // Get bookmarks with their levels and starting pages
             IList<ILeveledBookmark> foundBookmarks = GetBookmarks(outlines, destTree.GetNames(), sourceDoc);
             int documentEndPage = sourceDoc.GetNumberOfPages();
             sourceDoc.Close();
 
+            // Get all other pages (in addition to starting page) of all the bookmarks
             return GetAllPages(foundBookmarks, documentEndPage);
         }
 
@@ -100,7 +108,6 @@ namespace CX.PdfLib.Implementation
 
             return adjustedBookmarks;
         }
-
         internal static IList<ILeveledBookmark> AdjustBookmarksExtract(IList<ILeveledBookmark> sourceBookmarks, 
             IList<int> extractedPages)
         {

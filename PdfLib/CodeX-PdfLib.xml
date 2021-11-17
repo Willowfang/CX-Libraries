@@ -63,6 +63,11 @@
             Number of the page where the bookmarks starts at
             </summary>
         </member>
+        <member name="T:CX.PdfLib.Implementation.Data.ExtractRange">
+            <summary>
+            Default implementation of <see cref="T:CX.PdfLib.Services.Data.IExtractRange"/>
+            </summary>
+        </member>
         <member name="T:CX.PdfLib.Implementation.Data.LeveledBookmark">
             <summary>
             A class for bookmarks categorised by their level
