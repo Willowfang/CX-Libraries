@@ -170,26 +170,6 @@
             Level of the bookmark in the bookmark tree
             </summary>
         </member>
-        <member name="T:CX.PdfLib.Services.Data.IPdfFile">
-            <summary>
-            Information of a file in pdf-format
-            </summary>
-        </member>
-        <member name="P:CX.PdfLib.Services.Data.IPdfFile.Title">
-            <summary>
-            Title of the file
-            </summary>
-        </member>
-        <member name="P:CX.PdfLib.Services.Data.IPdfFile.FilePath">
-            <summary>
-            Path to the file
-            </summary>
-        </member>
-        <member name="P:CX.PdfLib.Services.Data.IPdfFile.IsSelected">
-            <summary>
-            True, if the file has been selected
-            </summary>
-        </member>
         <member name="M:CX.PdfLib.Services.IBookmarker.FindBookmarks(System.String)">
             <summary>
             Get leveled bookmarks from a document

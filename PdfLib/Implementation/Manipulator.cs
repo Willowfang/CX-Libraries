@@ -85,7 +85,6 @@ namespace CX.PdfLib.Implementation
         {
             return inputs.Select(x => x.FilePath).ToList();
         }
-
         // Returns a list of start pages of merged documents in the output file and total
         // number of pages in the final document
         private (IList<int> startPages, int outputPageCount) DoMerge(IList<string> mergePaths, PdfDocument doc)
@@ -94,7 +93,7 @@ namespace CX.PdfLib.Implementation
             int outputPageCount = doc.GetNumberOfPages();
             return (startPages, outputPageCount);
         }
-
+        // Add page numbers to a pdf document
         private void AddPageNumbers(Document doc)
         {
             for (int i = 1; i <= doc.GetPdfDocument().GetNumberOfPages(); i++)

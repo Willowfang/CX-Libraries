@@ -13,4 +13,12 @@ namespace CX.PdfLib.Extensions
             return Enumerable.Range(start, end).ToList();
         }
     }
+
+    internal static class RangeList
+    {
+        internal static List<int> Create(int start, int end)
+        {
+            return Enumerable.Range(start, end).ToList();
+        }
+    }
 }

@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace CX.PdfLib.Extensions
 {
-    internal static class BookmarkExtensions
+    public static class BookmarkExtensions
     {
         /// <summary>
         /// Return bookmark start page (ie. destination)
         /// </summary>
         /// <param name="bookmark"></param>
         /// <returns></returns>
-        internal static int StartPage(this IBookmark bookmark)
+        public static int StartPage(this IBookmark bookmark)
         {
             return bookmark.Pages[0];
         }
@@ -24,7 +24,7 @@ namespace CX.PdfLib.Extensions
         /// </summary>
         /// <param name="bookmark"></param>
         /// <returns></returns>
-        internal static int EndPage(this IBookmark bookmark)
+        public static int EndPage(this IBookmark bookmark)
         {
             return bookmark.Pages.Last();
         }
