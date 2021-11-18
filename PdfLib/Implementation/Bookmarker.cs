@@ -91,7 +91,7 @@ namespace CX.PdfLib.Implementation
                 // Add destination page number for currently processed outline (otherwise no navigation
                 // will happen by clicking bookmark name)
                 if (current.Pages[0] <= product.GetNumberOfPages())
-                    addOutline.AddDestination(PdfExplicitDestination.CreateFit(product.GetPage(current.StartPage())));
+                    addOutline.AddDestination(PdfExplicitDestination.CreateFit(product.GetPage(current.StartPage)));
             }
         }
 
@@ -103,7 +103,7 @@ namespace CX.PdfLib.Implementation
             foreach (ILeveledBookmark original in originalBookmarks)
             {
                 adjustedBookmarks.Add(new LeveledBookmark(original.Level, original.Title,
-                    startPageInNewDocument + original.StartPage() - 1, original.Pages.Count));
+                    startPageInNewDocument + original.StartPage - 1, original.Pages.Count));
             }
 
             return adjustedBookmarks;
@@ -118,7 +118,7 @@ namespace CX.PdfLib.Implementation
                 // Search for bookmarks with the current page as destination
                 foreach (ILeveledBookmark bookmark in sourceBookmarks)
                 {
-                    if (extractedPages[i] == bookmark.StartPage())
+                    if (extractedPages[i] == bookmark.StartPage)
                     {
                         // The corrected destination is the next page after all previous extracted pages
                         int correctedFirstPage = extractedPages.Count(x => x <= extractedPages[i]) + 1;

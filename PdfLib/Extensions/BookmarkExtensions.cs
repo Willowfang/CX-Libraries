@@ -11,24 +11,6 @@ namespace CX.PdfLib.Extensions
     public static class BookmarkExtensions
     {
         /// <summary>
-        /// Return bookmark start page (ie. destination)
-        /// </summary>
-        /// <param name="bookmark"></param>
-        /// <returns></returns>
-        public static int StartPage(this IBookmark bookmark)
-        {
-            return bookmark.Pages[0];
-        }
-        /// <summary>
-        /// Return the end page of bookmark's range
-        /// </summary>
-        /// <param name="bookmark"></param>
-        /// <returns></returns>
-        public static int EndPage(this IBookmark bookmark)
-        {
-            return bookmark.Pages.Last();
-        }
-        /// <summary>
         /// Adjust the level of all bookmarks in an <see cref="IList{ILeveledBookmark}"/>.
         /// </summary>
         /// <param name="originals"></param>

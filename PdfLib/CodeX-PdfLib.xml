@@ -4,20 +4,6 @@
         <name>CodeX-PdfLib</name>
     </assembly>
     <members>
-        <member name="M:CX.PdfLib.Extensions.BookmarkExtensions.StartPage(CX.PdfLib.Services.Data.IBookmark)">
-            <summary>
-            Return bookmark start page (ie. destination)
-            </summary>
-            <param name="bookmark"></param>
-            <returns></returns>
-        </member>
-        <member name="M:CX.PdfLib.Extensions.BookmarkExtensions.EndPage(CX.PdfLib.Services.Data.IBookmark)">
-            <summary>
-            Return the end page of bookmark's range
-            </summary>
-            <param name="bookmark"></param>
-            <returns></returns>
-        </member>
         <member name="M:CX.PdfLib.Extensions.BookmarkExtensions.AdjustLevels(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.Int32)">
             <summary>
             Adjust the level of all bookmarks in an <see cref="T:System.Collections.Generic.IList`1"/>.
@@ -35,6 +21,13 @@
             </summary>
             <param name="sourcePdf">Source document path</param>
             <returns></returns>
+        </member>
+        <member name="M:CX.PdfLib.Implementation.Bookmarker.FindLeveledBookmarks(iText.Kernel.Pdf.PdfDocument)">
+            <summary>
+            Find and return bookmarks with their levels
+            </summary>
+            <param name="sourceDoc">Document to search</param>
+            <returns>A list of leveled bookmarks</returns>
         </member>
         <member name="M:CX.PdfLib.Implementation.Bookmarker.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
             <summary>
@@ -128,6 +121,16 @@
         <member name="P:CX.PdfLib.Services.Data.IBookmark.Pages">
             <summary>
             Pages contained in the bookmark
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IBookmark.StartPage">
+            <summary>
+            Get first page (i.e. destination)
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.IBookmark.EndPage">
+            <summary>
+            Get last page
             </summary>
         </member>
         <member name="T:CX.PdfLib.Services.Data.IExtractRange">
