@@ -22,10 +22,10 @@ namespace CX.PdfLib.Services.Data
         /// <summary>
         /// Get first page (i.e. destination)
         /// </summary>
-        public int StartPage => Pages[0];
+        public int StartPage { get; }
         /// <summary>
         /// Get last page
         /// </summary>
-        public int EndPage => Pages.Last();
+        public int EndPage { get; }
     }
 }
