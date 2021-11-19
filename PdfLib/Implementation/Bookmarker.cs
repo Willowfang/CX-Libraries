@@ -23,15 +23,23 @@ namespace CX.PdfLib.Implementation
         {
             return FindLeveledBookmarks(new PdfDocument(new PdfReader(sourcePdf)));
         }
+        /// <summary>
+        /// Find and return bookmarks with their levels
+        /// </summary>
+        /// <param name="sourceDoc">Document to search</param>
+        /// <returns>A list of leveled bookmarks</returns>
         internal static IList<ILeveledBookmark> FindLeveledBookmarks(PdfDocument sourceDoc)
         {
+            // Get source document outlines (bookmarks) and a tree of destinations in the document
             PdfNameTree destTree = sourceDoc.GetCatalog().GetNameTree(PdfName.Dests);
             PdfOutline outlines = sourceDoc.GetOutlines(false);
 
+            // Get bookmarks with their levels and starting pages
             IList<ILeveledBookmark> foundBookmarks = GetBookmarks(outlines, destTree.GetNames(), sourceDoc);
             int documentEndPage = sourceDoc.GetNumberOfPages();
             sourceDoc.Close();
 
+            // Get all other pages (in addition to starting page) of all the bookmarks
             return GetAllPages(foundBookmarks, documentEndPage);
         }
 
@@ -83,7 +91,7 @@ namespace CX.PdfLib.Implementation
                 // Add destination page number for currently processed outline (otherwise no navigation
                 // will happen by clicking bookmark name)
                 if (current.Pages[0] <= product.GetNumberOfPages())
-                    addOutline.AddDestination(PdfExplicitDestination.CreateFit(product.GetPage(current.StartPage())));
+                    addOutline.AddDestination(PdfExplicitDestination.CreateFit(product.GetPage(current.StartPage)));
             }
         }
 
@@ -95,12 +103,11 @@ namespace CX.PdfLib.Implementation
             foreach (ILeveledBookmark original in originalBookmarks)
             {
                 adjustedBookmarks.Add(new LeveledBookmark(original.Level, original.Title,
-                    startPageInNewDocument + original.StartPage() - 1, original.Pages.Count));
+                    startPageInNewDocument + original.StartPage - 1, original.Pages.Count));
             }
 
             return adjustedBookmarks;
         }
-
         internal static IList<ILeveledBookmark> AdjustBookmarksExtract(IList<ILeveledBookmark> sourceBookmarks, 
             IList<int> extractedPages)
         {
@@ -111,7 +118,7 @@ namespace CX.PdfLib.Implementation
                 // Search for bookmarks with the current page as destination
                 foreach (ILeveledBookmark bookmark in sourceBookmarks)
                 {
-                    if (extractedPages[i] == bookmark.StartPage())
+                    if (extractedPages[i] == bookmark.StartPage)
                     {
                         // The corrected destination is the next page after all previous extracted pages
                         int correctedFirstPage = extractedPages.Count(x => x <= extractedPages[i]) + 1;
