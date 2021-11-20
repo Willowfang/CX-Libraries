@@ -10,6 +10,10 @@
     <DocumentationFile>C:\Users\jbjok\OneDrive - O365 Turun yliopisto\Koodaus\CodeX\Libraries\PdfLib\CodeX-PdfLib.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
+	
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
 
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Interop.Word">

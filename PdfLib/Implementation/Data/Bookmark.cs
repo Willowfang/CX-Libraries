@@ -61,7 +61,8 @@ namespace CX.PdfLib.Implementation.Data
 
         private static bool CheckEqualProperties(Bookmark a, Bookmark b)
         {
-            if (a == null || b == null) return false;
+            if (a is null && b is null) return true;
+            if (a is null || b is null) return false;
             return a.Title == b.Title &&
                 a.Pages.SequenceEqual(b.Pages);
         }

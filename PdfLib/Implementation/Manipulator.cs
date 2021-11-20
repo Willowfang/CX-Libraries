@@ -2,12 +2,9 @@
 using CX.PdfLib.Services;
 using CX.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CX.PdfLib.Extensions;
 using iText.Layout;
 using iText.Layout.Element;

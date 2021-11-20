@@ -10,7 +10,8 @@ namespace CX.PdfLib.Extensions
     {
         internal static List<int> Range(this List<int> list, int start, int end)
         {
-            return Enumerable.Range(start, end).ToList();
+            int count = end - start + 1;
+            return Enumerable.Range(start, count).ToList();
         }
     }
 
