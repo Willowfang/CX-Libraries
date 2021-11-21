@@ -21,10 +21,5 @@ namespace CX.PdfLib.Implementation.Data
             Name = name;
             Pages = pages;
         }
-        public ExtractRange(string name, int startPage, int endPage)
-        {
-            Name = name;
-            Pages = RangeList.Create(startPage, endPage);
-        }
     }
 }

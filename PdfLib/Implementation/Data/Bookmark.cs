@@ -29,10 +29,18 @@ namespace CX.PdfLib.Implementation.Data
             Title = title;
             Pages = pages;
         }
-
+        /// <summary>
+        /// Create a new bookmark
+        /// </summary>
+        /// <param name="title">Name of the bookmark</param>
+        /// <param name="startPage">Page number for starting point</param>
+        /// <param name="pageCount">Number of pages included in the bookmark's range</param>
+        /// <exception cref="ArgumentException">Thrown, if <paramref name="pageCount"/> is negative.</exception>
         public Bookmark(string title, int startPage, int pageCount)
         {
             Title = title;
+            if (pageCount < 0)
+                throw new ArgumentException("Bookmark page count cannot be negative.");
             Pages = new List<int>().Range(startPage, pageCount);
         }
 

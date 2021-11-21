@@ -19,13 +19,13 @@ namespace CX.PdfLib.Services
         /// <param name="sourceFile">Path of the file to extract from</param>
         /// <param name="destDirectory">Directory to extract the files to</param>
         /// <param name="ranges">Ranges to extract</param>
-        void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<IExtractRange> ranges);
+        void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges);
         /// <summary>
         /// Extract multiple page ranges into one file
         /// </summary>
         /// <param name="sourceFile">File to extract from</param>
         /// <param name="destFile">File to extract into</param>
         /// <param name="ranges">Page ranges to extract</param>
-        void Extract(string sourceFile, FileInfo destFile, IEnumerable<IExtractRange> ranges);
+        void Extract(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> ranges);
     }
 }

@@ -74,18 +74,27 @@ namespace CX.PdfLib.Implementation
                     addOutline = root.AddOutline(current.Title);
                 }
                 // If bookmarks is not a root level bookmark, find last outline
-                // that is one level below (to create a tree-like structure)
+                // that is smaller level than current (to create a tree-like structure)
                 else
                 {
-                    for (int i = outlines.Count; i-- > 0;)
+                    for (int parentLevel = current.Level - 1; parentLevel >= 1; parentLevel--)
                     {
-                        if (outlines[i].Item2.Level == current.Level - 1)
+                        for (int i = outlines.Count; i-- > 0;)
                         {
-                            addOutline = outlines[i].Item1.AddOutline(current.Title);
-                            break;
+                            if (outlines[i].Item2.Level == parentLevel)
+                            {
+                                addOutline = outlines[i].Item1.AddOutline(current.Title);
+                                break;
+                            }
                         }
+
+                        if (addOutline != null)
+                            break;
                     }
                 }
+                // If the bookmark is not a root-level bookmark but no parent has been found,
+                // assign the bookmark as a root-level bookmark
+                addOutline ??= root.AddOutline(current.Title);
 
                 outlines.Add(Tuple.Create(addOutline, current));
                 // Add destination page number for currently processed outline (otherwise no navigation
@@ -121,7 +130,7 @@ namespace CX.PdfLib.Implementation
                     if (extractedPages[i] == bookmark.StartPage)
                     {
                         // The corrected destination is the next page after all previous extracted pages
-                        int correctedFirstPage = extractedPages.Count(x => x <= extractedPages[i]) + 1;
+                        int correctedFirstPage = extractedPages.Count(x => x <= extractedPages[i]);
                         correctedBookmarks.Add(new LeveledBookmark(bookmark.Level,
                             bookmark.Title, correctedFirstPage, bookmark.Pages.Count));
                     }

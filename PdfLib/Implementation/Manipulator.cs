@@ -35,9 +35,9 @@ namespace CX.PdfLib.Implementation
             => converter.Convert(filePath, outputDirectory);
         public IList<string> Convert(IList<string> filePaths, string outputDirectory)
             => converter.Convert(filePaths, outputDirectory);
-        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<IExtractRange> ranges)
+        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges)
             => extractor.Extract(sourceFile, destDirectory, ranges);
-        public void Extract(string sourceFile, FileInfo destFile, IEnumerable<IExtractRange> ranges)
+        public void Extract(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> ranges)
             => extractor.Extract(sourceFile, destFile, ranges);
         public IList<ILeveledBookmark> FindBookmarks(string sourcePdf)
             => bookmarker.FindBookmarks(sourcePdf);

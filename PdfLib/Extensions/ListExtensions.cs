@@ -6,20 +6,19 @@ using System.Threading.Tasks;
 
 namespace CX.PdfLib.Extensions
 {
-    internal static class ListExtensions
+    public static class ListExtensions
     {
-        internal static List<int> Range(this List<int> list, int start, int end)
+        public static List<int> Range(this List<int> list, int start, int count)
         {
-            int count = end - start + 1;
             return Enumerable.Range(start, count).ToList();
         }
     }
 
-    internal static class RangeList
+    public static class RangeList
     {
-        internal static List<int> Create(int start, int end)
+        public static List<int> Create(int start, int count)
         {
-            return Enumerable.Range(start, end).ToList();
+            return Enumerable.Range(start, count).ToList();
         }
     }
 }
