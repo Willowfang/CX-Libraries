@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CX.PdfLib.Services.Data
+﻿namespace CX.PdfLib.Services.Data
 {
     /// <summary>
     /// Info on a file or title to be used in a document merge

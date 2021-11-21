@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CX.PdfLib.Extensions;
 using CX.PdfLib.Services.Data;
 
-namespace CX.PdfLib.Implementation.Data
+namespace CX.PdfLib.Common
 {
     /// <summary>
     /// Base class for bookmarks
@@ -45,7 +43,7 @@ namespace CX.PdfLib.Implementation.Data
         }
 
         public override bool Equals(object obj) =>
-            (obj is Bookmark other) && Equals(other);
+            obj is Bookmark other && Equals(other);
 
         public bool Equals(Bookmark other)
         {
@@ -57,12 +55,12 @@ namespace CX.PdfLib.Implementation.Data
             return Title.Concat(Pages.ToString()).GetHashCode();
         }
 
-        public static bool operator == (Bookmark a, Bookmark b)
+        public static bool operator ==(Bookmark a, Bookmark b)
         {
             return CheckEqualProperties(a, b);
         }
 
-        public static bool operator != (Bookmark a, Bookmark b)
+        public static bool operator !=(Bookmark a, Bookmark b)
         {
             return !CheckEqualProperties(a, b);
         }

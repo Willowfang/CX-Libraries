@@ -1,11 +1,6 @@
 ﻿using CX.PdfLib.Services.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CX.PdfLib.Implementation.Data
+namespace CX.PdfLib.Common
 {
     /// <summary>
     /// Default implementation for <see cref="IMergeInput"/>

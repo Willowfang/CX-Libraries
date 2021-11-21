@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CX.PdfLib.Services;
 using CX.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using CX.PdfLib.Extensions;
 using System.IO;
-using CX.PdfLib.Implementation.Data;
+using PdfLib.iText7;
 
 namespace CX.PdfLib.Implementation
 {

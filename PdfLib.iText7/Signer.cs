@@ -1,15 +1,9 @@
 ﻿using CX.PdfLib.Services;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CX.PdfLib.Extensions;
 using iText.Kernel.Pdf;
 using iText.Forms;
 
-namespace CX.PdfLib.Implementation
+namespace PdfLib.iText7
 {
     /// <summary>
     /// Default implementation for ISigner service

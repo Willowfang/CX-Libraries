@@ -1,4 +1,4 @@
-﻿using CX.PdfLib.Implementation.Data;
+﻿using CX.PdfLib.Common;
 using CX.PdfLib.Services;
 using CX.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
@@ -9,7 +9,7 @@ using CX.PdfLib.Extensions;
 using iText.Layout;
 using iText.Layout.Element;
 
-namespace CX.PdfLib.Implementation
+namespace PdfLib.iText7
 {
     public class Manipulator : IManipulator
     {
@@ -57,7 +57,7 @@ namespace CX.PdfLib.Implementation
             var (startPages, outputPageCount) = DoMerge(converted, doc);
 
             List<ILeveledBookmark> bookmarks = new List<ILeveledBookmark>();
-            for(int i = 0; i < inputs.Count; i++)
+            for (int i = 0; i < inputs.Count; i++)
             {
                 IMergeInput current = inputs[i];
                 bookmarks.Add(new LeveledBookmark(current.Level, current.Title,

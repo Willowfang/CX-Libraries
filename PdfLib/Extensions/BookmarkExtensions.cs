@@ -1,10 +1,6 @@
-﻿using CX.PdfLib.Implementation.Data;
+﻿using CX.PdfLib.Common;
 using CX.PdfLib.Services.Data;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CX.PdfLib.Extensions
 {
@@ -19,7 +15,7 @@ namespace CX.PdfLib.Extensions
         /// to level 1, if adjustment would bring it lower. This can be used to level all
         /// bookmarks to level 1.</remarks>
         /// <returns></returns>
-        internal static IList<ILeveledBookmark> AdjustLevels(this IEnumerable<ILeveledBookmark> originals, 
+        public static IList<ILeveledBookmark> AdjustLevels(this IEnumerable<ILeveledBookmark> originals, 
             int adjustment)
         {
             List<ILeveledBookmark> adjusted = new List<ILeveledBookmark>();

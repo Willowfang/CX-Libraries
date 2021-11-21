@@ -1,5 +1,4 @@
-﻿using CX.PdfLib.Extensions;
-using CX.PdfLib.Implementation.Data;
+﻿using CX.PdfLib.Common;
 using CX.PdfLib.Services;
 using CX.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
@@ -7,10 +6,8 @@ using iText.Kernel.Pdf.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CX.PdfLib.Implementation
+namespace PdfLib.iText7
 {
     public class Bookmarker : IBookmarker
     {
@@ -104,7 +101,7 @@ namespace CX.PdfLib.Implementation
             }
         }
 
-        internal static IList<ILeveledBookmark> AdjustBookmarksMerge(IList<ILeveledBookmark> originalBookmarks, 
+        internal static IList<ILeveledBookmark> AdjustBookmarksMerge(IList<ILeveledBookmark> originalBookmarks,
             int startPageInNewDocument)
         {
             List<ILeveledBookmark> adjustedBookmarks = new List<ILeveledBookmark>();
@@ -117,7 +114,7 @@ namespace CX.PdfLib.Implementation
 
             return adjustedBookmarks;
         }
-        internal static IList<ILeveledBookmark> AdjustBookmarksExtract(IList<ILeveledBookmark> sourceBookmarks, 
+        internal static IList<ILeveledBookmark> AdjustBookmarksExtract(IList<ILeveledBookmark> sourceBookmarks,
             IList<int> extractedPages)
         {
             List<ILeveledBookmark> correctedBookmarks = new List<ILeveledBookmark>();
@@ -140,13 +137,13 @@ namespace CX.PdfLib.Implementation
             return correctedBookmarks;
         }
 
-        private static IList<ILeveledBookmark> GetBookmarks(PdfOutline outline, 
+        private static IList<ILeveledBookmark> GetBookmarks(PdfOutline outline,
             IDictionary<string, PdfObject> sourceNames, PdfDocument sourceDocument, int level = 0)
         {
             if (outline == null) return null;
 
             List<ILeveledBookmark> bookmarks = new List<ILeveledBookmark>();
-            
+
             if (outline.GetDestination() != null)
             {
                 int startPage = sourceDocument.GetPageNumber(
@@ -180,7 +177,7 @@ namespace CX.PdfLib.Implementation
                 for (int j = i + 1; j < bookmarks.Count - i; j++)
                 {
                     ILeveledBookmark comparison = bookmarks[j];
-                    if (comparison.Level <= current.Level && 
+                    if (comparison.Level <= current.Level &&
                         comparison.Pages[0] > current.Pages[0])
                     {
                         endPage = comparison.Pages[0] - 1;

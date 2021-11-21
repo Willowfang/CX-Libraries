@@ -1,13 +1,9 @@
 ﻿using CX.PdfLib.Services;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CX.PdfLib.Implementation
+namespace PdfLib.iText7
 {
     public class Merger : IMerger
     {
