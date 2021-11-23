@@ -3,7 +3,7 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using System.Collections.Generic;
 
-namespace PdfLib.iText7
+namespace CX.PdfLib.iText7
 {
     public class Merger : IMerger
     {

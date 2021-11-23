@@ -4,59 +4,22 @@
         <name>CodeX-PdfLib</name>
     </assembly>
     <members>
-        <member name="M:CX.PdfLib.Extensions.BookmarkExtensions.AdjustLevels(System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.Int32)">
-            <summary>
-            Adjust the level of all bookmarks in an <see cref="T:System.Collections.Generic.IList`1"/>.
-            </summary>
-            <param name="originals"></param>
-            <param name="adjustment">Amount to adjust (positive or negative)</param>
-            <remarks>Bookmark level cannot be lower than 1. Bookmarks will be adjusted
-            to level 1, if adjustment would bring it lower. This can be used to level all
-            bookmarks to level 1.</remarks>
-            <returns></returns>
-        </member>
-        <member name="M:CX.PdfLib.Implementation.Bookmarker.FindBookmarks(System.String)">
-            <summary>
-            Get all bookmarks from a document
-            </summary>
-            <param name="sourcePdf">Source document path</param>
-            <returns></returns>
-        </member>
-        <member name="M:CX.PdfLib.Implementation.Bookmarker.FindLeveledBookmarks(iText.Kernel.Pdf.PdfDocument)">
-            <summary>
-            Find and return bookmarks with their levels
-            </summary>
-            <param name="sourceDoc">Document to search</param>
-            <returns>A list of leveled bookmarks</returns>
-        </member>
-        <member name="M:CX.PdfLib.Implementation.Bookmarker.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
-            <summary>
-            Add bookmarks to a document
-            </summary>
-            <param name="bookmarks">Bookmarks to add</param>
-            <param name="documentPath">Destination document path</param>
-        </member>
-        <member name="T:CX.PdfLib.Implementation.ConverterWord">
-            <summary>
-            Implementation of <see cref="T:CX.PdfLib.Services.IConverter"/> service
-            </summary>
-        </member>
-        <member name="T:CX.PdfLib.Implementation.Data.Bookmark">
+        <member name="T:CX.PdfLib.Common.Bookmark">
             <summary>
             Base class for bookmarks
             </summary>
         </member>
-        <member name="P:CX.PdfLib.Implementation.Data.Bookmark.Title">
+        <member name="P:CX.PdfLib.Common.Bookmark.Title">
             <summary>
             The title of the bookmark
             </summary>
         </member>
-        <member name="P:CX.PdfLib.Implementation.Data.Bookmark.Pages">
+        <member name="P:CX.PdfLib.Common.Bookmark.Pages">
             <summary>
             Number of the page where the bookmarks starts at
             </summary>
         </member>
-        <member name="M:CX.PdfLib.Implementation.Data.Bookmark.#ctor(System.String,System.Int32,System.Int32)">
+        <member name="M:CX.PdfLib.Common.Bookmark.#ctor(System.String,System.Int32,System.Int32)">
             <summary>
             Create a new bookmark
             </summary>
@@ -65,22 +28,17 @@
             <param name="pageCount">Number of pages included in the bookmark's range</param>
             <exception cref="T:System.ArgumentException">Thrown, if <paramref name="pageCount"/> is negative.</exception>
         </member>
-        <member name="T:CX.PdfLib.Implementation.Data.ExtractRange">
-            <summary>
-            Default implementation of <see cref="T:CX.PdfLib.Services.Data.IExtractRange"/>
-            </summary>
-        </member>
-        <member name="T:CX.PdfLib.Implementation.Data.LeveledBookmark">
+        <member name="T:CX.PdfLib.Common.LeveledBookmark">
             <summary>
             A class for bookmarks categorised by their level
             </summary>
         </member>
-        <member name="P:CX.PdfLib.Implementation.Data.LeveledBookmark.Level">
+        <member name="P:CX.PdfLib.Common.LeveledBookmark.Level">
             <summary>
             Level of the bookmark in the bookmark tree (1 leftmost)
             </summary>
         </member>
-        <member name="M:CX.PdfLib.Implementation.Data.LeveledBookmark.#ctor(System.Int32,System.String,System.Collections.Generic.IList{System.Int32})">
+        <member name="M:CX.PdfLib.Common.LeveledBookmark.#ctor(System.Int32,System.String,System.Collections.Generic.IList{System.Int32})">
             <summary>
             Create info on leveled bookmark
             </summary>
@@ -88,7 +46,7 @@
             <param name="title">Title of the bookmark</param>
             <param name="pages">Pages contained in the bookmark</param>
         </member>
-        <member name="M:CX.PdfLib.Implementation.Data.LeveledBookmark.#ctor(System.Int32,System.String,System.Int32,System.Int32)">
+        <member name="M:CX.PdfLib.Common.LeveledBookmark.#ctor(System.Int32,System.String,System.Int32,System.Int32)">
             <summary>
             Create info on leveled bookmark
             </summary>
@@ -99,34 +57,26 @@
             if <paramref name="pageCount"/> is negative.</param>
             <exception cref="T:System.ArgumentException">Thrown, if <paramref name="pageCount"/> is negative.</exception>
         </member>
-        <member name="T:CX.PdfLib.Implementation.Data.MergeInput">
+        <member name="T:CX.PdfLib.Common.MergeInput">
             <summary>
             Default implementation for <see cref="T:CX.PdfLib.Services.Data.IMergeInput"/>
             </summary>
         </member>
-        <member name="T:CX.PdfLib.Implementation.Extractor">
+        <member name="T:CX.PdfLib.Common.ProgressReport">
             <summary>
-            Implementation of <see cref="T:CX.PdfLib.Services.IExtractor"/> service
+            Class for reporting progress of a task
             </summary>
         </member>
-        <member name="M:CX.PdfLib.Implementation.Extractor.GetService">
+        <member name="M:CX.PdfLib.Extensions.BookmarkExtensions.AdjustLevels(System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.Int32)">
             <summary>
-            Get new instance as service
+            Adjust the level of all bookmarks in an <see cref="T:System.Collections.Generic.IList`1"/>.
             </summary>
-            <returns>IExtractor service</returns>
-        </member>
-        <member name="M:CX.PdfLib.Implementation.Extractor.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark})">
-            <summary>
-            Preserves original document bookmarks
-            </summary>
-            <param name="sourceFile"></param>
-            <param name="destFile"></param>
-            <param name="extractables"></param>
-        </member>
-        <member name="T:CX.PdfLib.Implementation.Signer">
-            <summary>
-            Default implementation for ISigner service
-            </summary>
+            <param name="originals"></param>
+            <param name="adjustment">Amount to adjust (positive or negative)</param>
+            <remarks>Bookmark level cannot be lower than 1. Bookmarks will be adjusted
+            to level 1, if adjustment would bring it lower. This can be used to level all
+            bookmarks to level 1.</remarks>
+            <returns></returns>
         </member>
         <member name="T:CX.PdfLib.Services.Data.IBookmark">
             <summary>
@@ -151,21 +101,6 @@
         <member name="P:CX.PdfLib.Services.Data.IBookmark.EndPage">
             <summary>
             Get last page
-            </summary>
-        </member>
-        <member name="T:CX.PdfLib.Services.Data.IExtractRange">
-            <summary>
-            A page range in a document set for extraction
-            </summary>
-        </member>
-        <member name="P:CX.PdfLib.Services.Data.IExtractRange.Name">
-            <summary>
-            Name of the range to extract (without extension)
-            </summary>
-        </member>
-        <member name="P:CX.PdfLib.Services.Data.IExtractRange.Pages">
-            <summary>
-            Pages to extract
             </summary>
         </member>
         <member name="T:CX.PdfLib.Services.Data.ILeveledBookmark">
@@ -242,7 +177,25 @@
             Extract pages from a pdf
             </summary>
         </member>
-        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark})">
+        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport})">
+            <summary>
+            Extract multiple page ranges into separate files
+            </summary>
+            <param name="sourceFile">Path of the file to extract from</param>
+            <param name="destDirectory">Directory to extract the files to</param>
+            <param name="ranges">Ranges to extract</param>
+            <param name="progress">Progress reporter for async calls</param>
+        </member>
+        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport})">
+            <summary>
+            Extract multiple page ranges into one file
+            </summary>
+            <param name="sourceFile">File to extract from</param>
+            <param name="destFile">File to extract into</param>
+            <param name="ranges">Page ranges to extract</param>
+            <param name="progress">Progress reporter for async calls</param>
+        </member>
+        <member name="M:CX.PdfLib.Services.IManipulator.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark})">
             <summary>
             Extract multiple page ranges into separate files
             </summary>
@@ -250,13 +203,31 @@
             <param name="destDirectory">Directory to extract the files to</param>
             <param name="ranges">Ranges to extract</param>
         </member>
-        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark})">
+        <member name="M:CX.PdfLib.Services.IManipulator.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark})">
             <summary>
             Extract multiple page ranges into one file
             </summary>
             <param name="sourceFile">File to extract from</param>
             <param name="destFile">File to extract into</param>
             <param name="ranges">Page ranges to extract</param>
+        </member>
+        <member name="M:CX.PdfLib.Services.IManipulator.ExtractAsync(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport})">
+            <summary>
+            Extract multiple page ranges into separate files asynchronously
+            </summary>
+            <param name="sourceFile">Path of the file to extract from</param>
+            <param name="destDirectory">Directory to extract the files to</param>
+            <param name="ranges">Ranges to extract</param>
+            <param name="progress">Optional progress reporter</param>
+        </member>
+        <member name="M:CX.PdfLib.Services.IManipulator.ExtractAsync(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport})">
+            <summary>
+            Extract multiple page ranges into one file asynchronously
+            </summary>
+            <param name="sourceFile">File to extract from</param>
+            <param name="destFile">File to extract into</param>
+            <param name="ranges">Page ranges to extract</param>
+            <param name="progress">Optional progress reporter</param>
         </member>
         <member name="M:CX.PdfLib.Services.IManipulator.MergeWithBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.IMergeInput},System.String)">
             <summary>

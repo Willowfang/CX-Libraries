@@ -3,7 +3,7 @@ using System.IO;
 using iText.Kernel.Pdf;
 using iText.Forms;
 
-namespace PdfLib.iText7
+namespace CX.PdfLib.iText7
 {
     /// <summary>
     /// Default implementation for ISigner service

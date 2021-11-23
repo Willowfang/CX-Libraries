@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PdfLib.iText7
+namespace CX.PdfLib.iText7
 {
     public class Bookmarker : IBookmarker
     {
@@ -174,7 +174,7 @@ namespace PdfLib.iText7
 
                 // End page is the end of document, unless a bookmark with lower or equal level
                 // is found AFTER current bookmark
-                for (int j = i + 1; j < bookmarks.Count - i; j++)
+                for (int j = i + 1; j < bookmarks.Count; j++)
                 {
                     ILeveledBookmark comparison = bookmarks[j];
                     if (comparison.Level <= current.Level &&

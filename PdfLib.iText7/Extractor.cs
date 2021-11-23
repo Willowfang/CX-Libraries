@@ -7,9 +7,10 @@ using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using CX.PdfLib.Extensions;
 using System.IO;
-using PdfLib.iText7;
+using CX.PdfLib.Common;
+using System.Threading;
 
-namespace CX.PdfLib.Implementation
+namespace CX.PdfLib.iText7
 {
     /// <summary>
     /// Implementation of <see cref="IExtractor"/> service
@@ -22,12 +23,19 @@ namespace CX.PdfLib.Implementation
         /// <returns>IExtractor service</returns>
         public static IExtractor GetService() => new Extractor();
 
-        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> extractables)
+        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> extractables,
+            IProgress<ProgressReport> progress = null)
         {
             var doc = new PdfDocument(new PdfReader(sourceFile));
 
+            int totalCount = extractables.Count();
+            int currentCount = 0;
             foreach (ILeveledBookmark bm in extractables)
             {
+                if (progress != null && totalCount > 50)
+                    progress.Report(new ProgressReport(currentCount * 100 / totalCount, ProgressPhase.Extracting,
+                        bm.Title));
+
                 // Extract pages into a file
                 FileInfo destFile = new FileInfo(Path.Combine(destDirectory.FullName,
                     bm.Title.ReplaceIllegal() + ".pdf"));
@@ -49,18 +57,25 @@ namespace CX.PdfLib.Implementation
                     Bookmarker.AddLeveledBookmarks(Bookmarker.AdjustBookmarksExtract(levelAdjustedChildren, bm.Pages), result);
                 }
                 result.Close();
+
+                currentCount++;
             }
 
             doc.Close();
+
+            if (progress != null)
+                progress.Report(new ProgressReport(100, ProgressPhase.Finished));
         }
-        /// <summary>
-        /// Preserves original document bookmarks
-        /// </summary>
-        /// <param name="sourceFile"></param>
-        /// <param name="destFile"></param>
-        /// <param name="extractables"></param>
-        public void Extract(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> extractables)
+
+        public void Extract(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> extractables,
+            IProgress<ProgressReport> progress = null)
         {
+            int totalCount = extractables.Count();
+
+            if (progress != null && totalCount > 50)
+                progress.Report(new ProgressReport(0, ProgressPhase.Extracting, 
+                    Path.GetFileNameWithoutExtension(sourceFile)));
+
             var doc = new PdfDocument(new PdfReader(sourceFile));
 
             // Get all pages in all the ranges
@@ -73,6 +88,10 @@ namespace CX.PdfLib.Implementation
             // Extract pages into a file
             var split = new ExtSplitter(doc, pageRange => new PdfWriter(destFile.FullName));
             var result = split.ExtractPages(pages);
+
+            if (progress != null && totalCount > 50)
+                progress.Report(new ProgressReport(50, ProgressPhase.AddingBookmarks,
+                    Path.GetFileNameWithoutExtension(sourceFile)));
 
             // Add bookmarks pointing to extracted pages from the original document
             IList<ILeveledBookmark> sourceBookmarks = Bookmarker.FindLeveledBookmarks(doc);
@@ -87,6 +106,10 @@ namespace CX.PdfLib.Implementation
             }
 
             result.Close();
+
+            if (progress != null)
+                progress.Report(new ProgressReport(100, ProgressPhase.Finished));
+
         }
 
         internal class ExtSplitter : PdfSplitter

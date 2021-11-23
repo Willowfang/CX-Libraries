@@ -12,6 +12,7 @@
 
     <PropertyGroup>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<RootNamespace>CX.PdfLib.iText7</RootNamespace>
 	</PropertyGroup>
 
   <ItemGroup>

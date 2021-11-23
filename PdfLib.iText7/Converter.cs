@@ -3,7 +3,7 @@ using Microsoft.Office.Interop.Word;
 using System.Collections.Generic;
 using System.IO;
 
-namespace PdfLib.iText7
+namespace CX.PdfLib.iText7
 {
     /// <summary>
     /// Implementation of <see cref="IConverter"/> service

@@ -341,3 +341,9 @@ healthchecksdb
 
 # Test projects
 /PdfLibTests/
+
+# Resource directories
+Resources/
+
+# Resource files
+*.resx
