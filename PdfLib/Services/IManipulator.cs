@@ -69,6 +69,7 @@ namespace CX.PdfLib.Services
 
         #region MERGING
         public IList<int> Merge(IList<string> sourcePaths, string outputPath);
+        public Task<IList<int>> MergeAsync(IList<string> sourcePaths, string outputPath);
         #endregion
 
         /// <summary>
@@ -79,6 +80,9 @@ namespace CX.PdfLib.Services
         /// <param name="inputs">Inputs for the merge, includes merging files
         /// and titles</param>
         /// <param name="outputPath">Output file path</param>
-        public void MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath);
+        /// <param name="addPageNumbers">If true, add page numbers to new document</param>
+        public void MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers);
+        public Task MergeWithBookmarksAsync(IList<IMergeInput> inputs, string outputPath,
+            bool addPageNumbers, IProgress<ProgressReport> progress = null);
     }
 }

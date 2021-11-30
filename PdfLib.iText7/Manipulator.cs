@@ -105,14 +105,38 @@ namespace CX.PdfLib.iText7
         #region MERGE
         public IList<int> Merge(IList<string> sourcePaths, string outputPath)
             => merger.Merge(sourcePaths, outputPath);
+        public async Task<IList<int>> MergeAsync(IList<string> sourcePaths, string outputPath)
+        {
+            return await Task.Run(() => merger.Merge(sourcePaths, outputPath));
+        }
         #endregion
 
-        public void MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath)
+        public void MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers)
+            => BookmarkMerge(inputs, outputPath, addPageNumbers);
+        public async Task MergeWithBookmarksAsync(IList<IMergeInput> inputs, string outputPath,
+            bool addPageNumbers, IProgress<ProgressReport> progress)
         {
+            await Task.Run(() => BookmarkMerge(inputs, outputPath, addPageNumbers, progress));
+        }
+
+        private void BookmarkMerge(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers,
+            IProgress<ProgressReport> progress = null)
+        {
+            int totalStages = 4;
+            if (addPageNumbers) totalStages++;
+
             PdfDocument doc = new PdfDocument(new PdfWriter(outputPath));
+
+            // Stage 1: convert Word-documents
+            progress?.Report(new ProgressReport(0, ProgressPhase.Converting));
             IList<string> converted = converter.Convert(GetMergePaths(inputs), null);
+
+            // Stage 2: merge documents
+            progress?.Report(new ProgressReport(1 / totalStages * 100, ProgressPhase.Merging));
             var (startPages, outputPageCount) = DoMerge(converted, doc);
 
+            // Stage 3: gather and adjust info for bookmarks
+            progress?.Report(new ProgressReport(2 / totalStages * 100, ProgressPhase.GettingBookmarks));
             List<ILeveledBookmark> bookmarks = new List<ILeveledBookmark>();
             for (int i = 0; i < inputs.Count; i++)
             {
@@ -127,14 +151,23 @@ namespace CX.PdfLib.iText7
                 }
             }
 
+            // Stage 4: Add bookmarks to document
+            progress?.Report(new ProgressReport(3 / totalStages * 100, ProgressPhase.AddingBookmarks));
             doc.GetCatalog().Remove(PdfName.Outlines);
             Bookmarker.AddLeveledBookmarks(Bookmarker.GetAllPages(bookmarks, outputPageCount), doc);
 
-            Document document = new Document(doc);
-            AddPageNumbers(document);
-            document.Close();
-        }
+            // Stage 5: add page numbers
+            if (addPageNumbers)
+            {
+                progress?.Report(new ProgressReport(4 / totalStages * 100, ProgressPhase.AddingPageNumbers));
+                Document document = new Document(doc);
+                AddPageNumbers(document);
+                document.Close();
+            }
 
+            if (!doc.IsClosed()) doc.Close();
+            progress?.Report(new ProgressReport(100, ProgressPhase.Finished));
+        }
         private List<string> GetMergePaths(IList<IMergeInput> inputs)
         {
             return inputs.Select(x => x.FilePath).ToList();
@@ -152,8 +185,14 @@ namespace CX.PdfLib.iText7
         {
             for (int i = 1; i <= doc.GetPdfDocument().GetNumberOfPages(); i++)
             {
-                doc.ShowTextAligned(new Paragraph($"{i}"), 520, 780, i, iText.Layout.Properties.TextAlignment.RIGHT,
+                iText.Kernel.Geom.Rectangle rect = doc.GetPdfDocument().GetPage(i).GetPageSize();
+                float x = rect.GetRight() - (rect.GetWidth() * 0.05f);
+                float y = rect.GetTop() - (rect.GetHeight() * 0.05f);
+                Paragraph para = new Paragraph($"{i}");
+                para.SetFontSize(rect.GetHeight() * 0.02f);
+                doc.ShowTextAligned(para, x, y, i, iText.Layout.Properties.TextAlignment.RIGHT,
                     iText.Layout.Properties.VerticalAlignment.TOP, 0);
+                // 520, 780
             }
         }
     }

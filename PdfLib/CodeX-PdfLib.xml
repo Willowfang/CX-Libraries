@@ -229,7 +229,7 @@
             <param name="ranges">Page ranges to extract</param>
             <param name="progress">Optional progress reporter</param>
         </member>
-        <member name="M:CX.PdfLib.Services.IManipulator.MergeWithBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.IMergeInput},System.String)">
+        <member name="M:CX.PdfLib.Services.IManipulator.MergeWithBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.IMergeInput},System.String,System.Boolean)">
             <summary>
             Merge documents into one pdf. Create top-level bookmarks for merged
             files and assign them given titles. Retain all bookmarks from original documents
@@ -238,6 +238,7 @@
             <param name="inputs">Inputs for the merge, includes merging files
             and titles</param>
             <param name="outputPath">Output file path</param>
+            <param name="addPageNumbers">If true, add page numbers to new document</param>
         </member>
         <member name="T:CX.PdfLib.Services.IMerger">
             <summary>

@@ -9,8 +9,12 @@ namespace CX.PdfLib.Common
     public enum ProgressPhase
     {
         Unassigned,
-        Extracting,
         AddingBookmarks,
+        AddingPageNumbers,
+        Converting,
+        Extracting,
+        GettingBookmarks,
+        Merging,
         Finished
     }
 
