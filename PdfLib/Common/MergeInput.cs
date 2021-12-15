@@ -9,7 +9,7 @@ namespace CX.PdfLib.Common
     {
         public string FilePath { get; }
         public string Title { get; }
-        public int Level { get; }
+        public int Level { get; set; }
 
         public MergeInput(string filePath, string title, int level)
         {

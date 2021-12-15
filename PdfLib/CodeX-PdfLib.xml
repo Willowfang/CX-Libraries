@@ -108,9 +108,14 @@
             A bookmark in a tree hierarchy
             </summary>
         </member>
-        <member name="P:CX.PdfLib.Services.Data.ILeveledBookmark.Level">
+        <member name="T:CX.PdfLib.Services.Data.ILeveledItem">
             <summary>
-            Level in the tree
+            An object that has a property indicating its level in a hierarchy
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.Services.Data.ILeveledItem.Level">
+            <summary>
+            Level of the item in the hierarchy
             </summary>
         </member>
         <member name="T:CX.PdfLib.Services.Data.IMergeInput">
@@ -126,11 +131,6 @@
         <member name="P:CX.PdfLib.Services.Data.IMergeInput.Title">
             <summary>
             Title of the bookmark to add
-            </summary>
-        </member>
-        <member name="P:CX.PdfLib.Services.Data.IMergeInput.Level">
-            <summary>
-            Level of the bookmark in the bookmark tree
             </summary>
         </member>
         <member name="M:CX.PdfLib.Services.IBookmarker.FindBookmarks(System.String)">

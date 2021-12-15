@@ -12,7 +12,7 @@ namespace CX.PdfLib.Common
         /// <summary>
         /// Level of the bookmark in the bookmark tree (1 leftmost)
         /// </summary>
-        public int Level { get; }
+        public int Level { get; set; }
 
         /// <summary>
         /// Create info on leveled bookmark
