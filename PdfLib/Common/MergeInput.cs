@@ -1,11 +1,6 @@
 ﻿using CX.PdfLib.Services.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CX.PdfLib.Implementation.Data
+namespace CX.PdfLib.Common
 {
     /// <summary>
     /// Default implementation for <see cref="IMergeInput"/>
@@ -14,7 +9,7 @@ namespace CX.PdfLib.Implementation.Data
     {
         public string FilePath { get; }
         public string Title { get; }
-        public int Level { get; }
+        public int Level { get; set; }
 
         public MergeInput(string filePath, string title, int level)
         {

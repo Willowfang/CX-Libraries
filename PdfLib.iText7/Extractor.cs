@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CX.PdfLib.Services;
 using CX.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using CX.PdfLib.Extensions;
 using System.IO;
-using CX.PdfLib.Implementation.Data;
+using CX.PdfLib.Common;
+using System.Threading;
 
-namespace CX.PdfLib.Implementation
+namespace CX.PdfLib.iText7
 {
     /// <summary>
     /// Implementation of <see cref="IExtractor"/> service
@@ -24,48 +23,93 @@ namespace CX.PdfLib.Implementation
         /// <returns>IExtractor service</returns>
         public static IExtractor GetService() => new Extractor();
 
-        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<IExtractRange> ranges)
+        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> extractables,
+            IProgress<ProgressReport> progress = null)
         {
             var doc = new PdfDocument(new PdfReader(sourceFile));
 
-            foreach (IExtractRange range in ranges)
+            int totalCount = extractables.Count();
+            int currentCount = 0;
+            foreach (ILeveledBookmark bm in extractables)
             {
+                if (progress != null && totalCount > 50)
+                    progress.Report(new ProgressReport(currentCount * 100 / totalCount, ProgressPhase.Extracting,
+                        bm.Title));
+
                 // Extract pages into a file
                 FileInfo destFile = new FileInfo(Path.Combine(destDirectory.FullName,
-                    range.Name.ReplaceIllegal() + ".pdf"));
+                    bm.Title.ReplaceIllegal() + ".pdf"));
                 destDirectory.Create();
                 var split = new ExtSplitter(doc, pageRange => new PdfWriter(destFile));
-                var result = split.ExtractPages(range.Pages);
+                var result = split.ExtractPages(bm.Pages);
 
+                // Remove bookmarks copied with merging
+                result.GetCatalog().Remove(PdfName.Outlines);
+                // Find children of the current bookmark in the original list and adjust their start pages
+                // to match the new document
+                IList<ILeveledBookmark> children = Bookmarker.AdjustBookmarksExtract(extractables.ToList(), bm.Pages);
+                // Remove the bookmark being extracted from previous list
+                children.RemoveAt(0);
+                // If there are children, adjust their levels to match the new document tree
+                if (children.Count > 0)
+                {
+                    IList<ILeveledBookmark> levelAdjustedChildren = children.AdjustLevels(1 - children[0].Level);
+                    Bookmarker.AddLeveledBookmarks(Bookmarker.AdjustBookmarksExtract(levelAdjustedChildren, bm.Pages), result);
+                }
                 result.Close();
+
+                currentCount++;
             }
 
             doc.Close();
+
+            if (progress != null)
+                progress.Report(new ProgressReport(100, ProgressPhase.Finished));
         }
-        /// <summary>
-        /// Preserves original document bookmarks
-        /// </summary>
-        /// <param name="sourceFile"></param>
-        /// <param name="destFile"></param>
-        /// <param name="ranges"></param>
-        public void Extract(string sourceFile, FileInfo destFile, IEnumerable<IExtractRange> ranges)
+
+        public void Extract(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> extractables,
+            IProgress<ProgressReport> progress = null)
         {
+            int totalCount = extractables.Count();
+
+            if (progress != null && totalCount > 50)
+                progress.Report(new ProgressReport(0, ProgressPhase.Extracting, 
+                    Path.GetFileNameWithoutExtension(sourceFile)));
+
             var doc = new PdfDocument(new PdfReader(sourceFile));
 
             // Get all pages in all the ranges
             List<int> pages = new List<int>();
-            foreach (IExtractRange range in ranges)
+            foreach (ILeveledBookmark bm in extractables)
             {
-                pages.AddRange(range.Pages);
+                pages.AddRange(bm.Pages);
             }
 
             // Extract pages into a file
-            var split = new ExtSplitter(doc, pageRange => new PdfWriter(destFile));
+            var split = new ExtSplitter(doc, pageRange => new PdfWriter(destFile.FullName));
             var result = split.ExtractPages(pages);
+
+            if (progress != null && totalCount > 50)
+                progress.Report(new ProgressReport(50, ProgressPhase.AddingBookmarks,
+                    Path.GetFileNameWithoutExtension(sourceFile)));
 
             // Add bookmarks pointing to extracted pages from the original document
             IList<ILeveledBookmark> sourceBookmarks = Bookmarker.FindLeveledBookmarks(doc);
-            Bookmarker.AddLeveledBookmarks(Bookmarker.AdjustBookmarksExtract(sourceBookmarks, pages), result);
+            doc.Close();
+            // Remove bookmarks copied with merging
+            result.GetCatalog().Remove(PdfName.Outlines);
+            // Adjust pages to match the new document and adjust levels
+            IList<ILeveledBookmark> adjusted = Bookmarker.AdjustBookmarksExtract(sourceBookmarks, pages);
+            if (adjusted.Count > 0)
+            {
+                Bookmarker.AddLeveledBookmarks(adjusted.AdjustLevels(1 - adjusted[0].Level), result);
+            }
+
+            result.Close();
+
+            if (progress != null)
+                progress.Report(new ProgressReport(100, ProgressPhase.Finished));
+
         }
 
         internal class ExtSplitter : PdfSplitter
@@ -83,7 +127,8 @@ namespace CX.PdfLib.Implementation
 
             public PdfDocument ExtractPages(IList<int> pages)
             {
-                return ExtractPageRange(new PageRange(RangesAsString(pages)));
+                string range = RangesAsString(pages);
+                return ExtractPageRange(new PageRange(range));
             }
 
             private string RangesAsString(IList<int> pages)

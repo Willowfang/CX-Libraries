@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CodeX-PdfLib-iText7</name>
+    </assembly>
+    <members>
+        <member name="M:CX.PdfLib.iText7.Bookmarker.FindBookmarks(System.String)">
+            <summary>
+            Get all bookmarks from a document
+            </summary>
+            <param name="sourcePdf">Source document path</param>
+            <returns></returns>
+        </member>
+        <member name="M:CX.PdfLib.iText7.Bookmarker.FindLeveledBookmarks(iText.Kernel.Pdf.PdfDocument)">
+            <summary>
+            Find and return bookmarks with their levels
+            </summary>
+            <param name="sourceDoc">Document to search</param>
+            <returns>A list of leveled bookmarks</returns>
+        </member>
+        <member name="M:CX.PdfLib.iText7.Bookmarker.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
+            <summary>
+            Add bookmarks to a document
+            </summary>
+            <param name="bookmarks">Bookmarks to add</param>
+            <param name="documentPath">Destination document path</param>
+        </member>
+        <member name="T:CX.PdfLib.iText7.ConverterWord">
+            <summary>
+            Implementation of <see cref="T:CX.PdfLib.Services.IConverter"/> service
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.iText7.Extractor">
+            <summary>
+            Implementation of <see cref="T:CX.PdfLib.Services.IExtractor"/> service
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.iText7.Extractor.GetService">
+            <summary>
+            Get new instance as service
+            </summary>
+            <returns>IExtractor service</returns>
+        </member>
+        <member name="T:CX.PdfLib.iText7.Signer">
+            <summary>
+            Default implementation for ISigner service
+            </summary>
+        </member>
+    </members>
+</doc>

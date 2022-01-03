@@ -1,5 +1,4 @@
-﻿using CX.PdfLib.Extensions;
-using CX.PdfLib.Implementation.Data;
+﻿using CX.PdfLib.Common;
 using CX.PdfLib.Services;
 using CX.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
@@ -7,10 +6,8 @@ using iText.Kernel.Pdf.Navigation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CX.PdfLib.Implementation
+namespace CX.PdfLib.iText7
 {
     public class Bookmarker : IBookmarker
     {
@@ -74,18 +71,27 @@ namespace CX.PdfLib.Implementation
                     addOutline = root.AddOutline(current.Title);
                 }
                 // If bookmarks is not a root level bookmark, find last outline
-                // that is one level below (to create a tree-like structure)
+                // that is smaller level than current (to create a tree-like structure)
                 else
                 {
-                    for (int i = outlines.Count; i-- > 0;)
+                    for (int parentLevel = current.Level - 1; parentLevel >= 1; parentLevel--)
                     {
-                        if (outlines[i].Item2.Level == current.Level - 1)
+                        for (int i = outlines.Count; i-- > 0;)
                         {
-                            addOutline = outlines[i].Item1.AddOutline(current.Title);
-                            break;
+                            if (outlines[i].Item2.Level == parentLevel)
+                            {
+                                addOutline = outlines[i].Item1.AddOutline(current.Title);
+                                break;
+                            }
                         }
+
+                        if (addOutline != null)
+                            break;
                     }
                 }
+                // If the bookmark is not a root-level bookmark but no parent has been found,
+                // assign the bookmark as a root-level bookmark
+                addOutline ??= root.AddOutline(current.Title);
 
                 outlines.Add(Tuple.Create(addOutline, current));
                 // Add destination page number for currently processed outline (otherwise no navigation
@@ -95,7 +101,7 @@ namespace CX.PdfLib.Implementation
             }
         }
 
-        internal static IList<ILeveledBookmark> AdjustBookmarksMerge(IList<ILeveledBookmark> originalBookmarks, 
+        internal static IList<ILeveledBookmark> AdjustBookmarksMerge(IList<ILeveledBookmark> originalBookmarks,
             int startPageInNewDocument)
         {
             List<ILeveledBookmark> adjustedBookmarks = new List<ILeveledBookmark>();
@@ -108,7 +114,7 @@ namespace CX.PdfLib.Implementation
 
             return adjustedBookmarks;
         }
-        internal static IList<ILeveledBookmark> AdjustBookmarksExtract(IList<ILeveledBookmark> sourceBookmarks, 
+        internal static IList<ILeveledBookmark> AdjustBookmarksExtract(IList<ILeveledBookmark> sourceBookmarks,
             IList<int> extractedPages)
         {
             List<ILeveledBookmark> correctedBookmarks = new List<ILeveledBookmark>();
@@ -121,7 +127,7 @@ namespace CX.PdfLib.Implementation
                     if (extractedPages[i] == bookmark.StartPage)
                     {
                         // The corrected destination is the next page after all previous extracted pages
-                        int correctedFirstPage = extractedPages.Count(x => x <= extractedPages[i]) + 1;
+                        int correctedFirstPage = extractedPages.Count(x => x <= extractedPages[i]);
                         correctedBookmarks.Add(new LeveledBookmark(bookmark.Level,
                             bookmark.Title, correctedFirstPage, bookmark.Pages.Count));
                     }
@@ -131,13 +137,13 @@ namespace CX.PdfLib.Implementation
             return correctedBookmarks;
         }
 
-        private static IList<ILeveledBookmark> GetBookmarks(PdfOutline outline, 
+        private static IList<ILeveledBookmark> GetBookmarks(PdfOutline outline,
             IDictionary<string, PdfObject> sourceNames, PdfDocument sourceDocument, int level = 0)
         {
             if (outline == null) return null;
 
             List<ILeveledBookmark> bookmarks = new List<ILeveledBookmark>();
-            
+
             if (outline.GetDestination() != null)
             {
                 int startPage = sourceDocument.GetPageNumber(
@@ -168,10 +174,10 @@ namespace CX.PdfLib.Implementation
 
                 // End page is the end of document, unless a bookmark with lower or equal level
                 // is found AFTER current bookmark
-                for (int j = i + 1; j < bookmarks.Count - i; j++)
+                for (int j = i + 1; j < bookmarks.Count; j++)
                 {
                     ILeveledBookmark comparison = bookmarks[j];
-                    if (comparison.Level <= current.Level && 
+                    if (comparison.Level <= current.Level &&
                         comparison.Pages[0] > current.Pages[0])
                     {
                         endPage = comparison.Pages[0] - 1;

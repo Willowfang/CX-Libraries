@@ -1,10 +1,8 @@
-﻿using CX.PdfLib.Services.Data;
+﻿using CX.PdfLib.Common;
+using CX.PdfLib.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CX.PdfLib.Services
 {
@@ -19,13 +17,17 @@ namespace CX.PdfLib.Services
         /// <param name="sourceFile">Path of the file to extract from</param>
         /// <param name="destDirectory">Directory to extract the files to</param>
         /// <param name="ranges">Ranges to extract</param>
-        void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<IExtractRange> ranges);
+        /// <param name="progress">Progress reporter for async calls</param>
+        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges,
+            IProgress<ProgressReport> progress = null);
         /// <summary>
         /// Extract multiple page ranges into one file
         /// </summary>
         /// <param name="sourceFile">File to extract from</param>
         /// <param name="destFile">File to extract into</param>
         /// <param name="ranges">Page ranges to extract</param>
-        void Extract(string sourceFile, FileInfo destFile, IEnumerable<IExtractRange> ranges);
+        /// <param name="progress">Progress reporter for async calls</param>
+        public void Extract(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> ranges,
+            IProgress<ProgressReport> progress = null);
     }
 }

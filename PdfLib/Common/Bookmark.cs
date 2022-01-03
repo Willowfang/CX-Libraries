@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CX.PdfLib.Extensions;
 using CX.PdfLib.Services.Data;
 
-namespace CX.PdfLib.Implementation.Data
+namespace CX.PdfLib.Common
 {
     /// <summary>
     /// Base class for bookmarks
@@ -29,15 +27,23 @@ namespace CX.PdfLib.Implementation.Data
             Title = title;
             Pages = pages;
         }
-
+        /// <summary>
+        /// Create a new bookmark
+        /// </summary>
+        /// <param name="title">Name of the bookmark</param>
+        /// <param name="startPage">Page number for starting point</param>
+        /// <param name="pageCount">Number of pages included in the bookmark's range</param>
+        /// <exception cref="ArgumentException">Thrown, if <paramref name="pageCount"/> is negative.</exception>
         public Bookmark(string title, int startPage, int pageCount)
         {
             Title = title;
+            if (pageCount < 0)
+                throw new ArgumentException("Bookmark page count cannot be negative.");
             Pages = new List<int>().Range(startPage, pageCount);
         }
 
         public override bool Equals(object obj) =>
-            (obj is Bookmark other) && Equals(other);
+            obj is Bookmark other && Equals(other);
 
         public bool Equals(Bookmark other)
         {
@@ -49,19 +55,20 @@ namespace CX.PdfLib.Implementation.Data
             return Title.Concat(Pages.ToString()).GetHashCode();
         }
 
-        public static bool operator == (Bookmark a, Bookmark b)
+        public static bool operator ==(Bookmark a, Bookmark b)
         {
             return CheckEqualProperties(a, b);
         }
 
-        public static bool operator != (Bookmark a, Bookmark b)
+        public static bool operator !=(Bookmark a, Bookmark b)
         {
             return !CheckEqualProperties(a, b);
         }
 
         private static bool CheckEqualProperties(Bookmark a, Bookmark b)
         {
-            if (a == null || b == null) return false;
+            if (a is null && b is null) return true;
+            if (a is null || b is null) return false;
             return a.Title == b.Title &&
                 a.Pages.SequenceEqual(b.Pages);
         }

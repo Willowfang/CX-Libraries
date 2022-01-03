@@ -1,13 +1,9 @@
 ﻿using CX.PdfLib.Services;
 using Microsoft.Office.Interop.Word;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CX.PdfLib.Implementation
+namespace CX.PdfLib.iText7
 {
     /// <summary>
     /// Implementation of <see cref="IConverter"/> service
@@ -18,7 +14,7 @@ namespace CX.PdfLib.Implementation
         {
             IList<string> result = Convert(new List<string>() { filePath }, outputDirectory);
             if (result.Count > 0) return result[0];
-            
+
             else return null;
         }
 
@@ -40,7 +36,7 @@ namespace CX.PdfLib.Implementation
 
                 if (outputDirectory == null)
                     outputDirectory = Path.GetDirectoryName(inputPath);
-                string outputPath = Path.Combine(outputDirectory, 
+                string outputPath = Path.Combine(outputDirectory,
                     Path.GetFileNameWithoutExtension(inputPath) + ".pdf");
                 ExecuteConvert(app, inputPath, outputPath);
                 converted.Add(outputPath);
