@@ -239,6 +239,7 @@
             and titles</param>
             <param name="outputPath">Output file path</param>
             <param name="addPageNumbers">If true, add page numbers to new document</param>
+            <returns>List of created files</returns>
         </member>
         <member name="T:CX.PdfLib.Services.IMerger">
             <summary>

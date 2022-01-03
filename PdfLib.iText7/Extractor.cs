@@ -8,7 +8,6 @@ using iText.Kernel.Utils;
 using CX.PdfLib.Extensions;
 using System.IO;
 using CX.PdfLib.Common;
-using System.Threading;
 
 namespace CX.PdfLib.iText7
 {

@@ -3,6 +3,7 @@ using CX.PdfLib.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CX.PdfLib.Services
@@ -81,8 +82,10 @@ namespace CX.PdfLib.Services
         /// and titles</param>
         /// <param name="outputPath">Output file path</param>
         /// <param name="addPageNumbers">If true, add page numbers to new document</param>
-        public void MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers);
-        public Task MergeWithBookmarksAsync(IList<IMergeInput> inputs, string outputPath,
-            bool addPageNumbers, IProgress<ProgressReport> progress = null);
+        /// <returns>List of created files</returns>
+        public IList<string> MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers);
+        public Task<IList<string>> MergeWithBookmarksAsync(IList<IMergeInput> inputs, string outputPath,
+            bool addPageNumbers, IProgress<ProgressReport> progress = null, 
+            CancellationToken cancellation = default(CancellationToken));
     }
 }
