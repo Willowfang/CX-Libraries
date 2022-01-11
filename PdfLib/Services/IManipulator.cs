@@ -17,7 +17,7 @@ namespace CX.PdfLib.Services
         /// <param name="sourceFile">Path of the file to extract from</param>
         /// <param name="destDirectory">Directory to extract the files to</param>
         /// <param name="ranges">Ranges to extract</param>
-        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges);
+        public IList<FileSystemInfo> Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges);
         /// <summary>
         /// Extract multiple page ranges into one file
         /// </summary>
@@ -32,8 +32,9 @@ namespace CX.PdfLib.Services
         /// <param name="destDirectory">Directory to extract the files to</param>
         /// <param name="ranges">Ranges to extract</param>
         /// <param name="progress">Optional progress reporter</param>
-        public Task ExtractAsync(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges,
-            IProgress<ProgressReport> progress = null);
+        /// <param name="cancellation">Token for operation cancellation</param>
+        public Task<IList<FileSystemInfo>> ExtractAsync(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges,
+            IProgress<ProgressReport> progress = null, CancellationToken cancellation = default(CancellationToken));
         /// <summary>
         /// Extract multiple page ranges into one file asynchronously
         /// </summary>
@@ -41,8 +42,9 @@ namespace CX.PdfLib.Services
         /// <param name="destFile">File to extract into</param>
         /// <param name="ranges">Page ranges to extract</param>
         /// <param name="progress">Optional progress reporter</param>
+        /// <param name="cancellation">Token for operation cancellation</param>
         public Task ExtractAsync(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> ranges,
-            IProgress<ProgressReport> progress = null);
+            IProgress<ProgressReport> progress = null, CancellationToken cancellation = default(CancellationToken));
         #endregion
 
         #region BOOKMARKS

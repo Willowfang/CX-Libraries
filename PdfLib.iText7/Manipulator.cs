@@ -33,21 +33,23 @@ namespace CX.PdfLib.iText7
         }
 
         #region EXTRACTION
-        public void Extract(string sourceFile, DirectoryInfo destDirectory,
+        public IList<FileSystemInfo> Extract(string sourceFile, DirectoryInfo destDirectory,
             IEnumerable<ILeveledBookmark> ranges)
             => extractor.Extract(sourceFile, destDirectory, ranges);
         public void Extract(string sourceFile, FileInfo destFile,
             IEnumerable<ILeveledBookmark> ranges)
             => extractor.Extract(sourceFile, destFile, ranges);
         public async Task ExtractAsync(string sourceFile, FileInfo destFile,
-            IEnumerable<ILeveledBookmark> ranges, IProgress<ProgressReport> progress)
+            IEnumerable<ILeveledBookmark> ranges, IProgress<ProgressReport> progress,
+            CancellationToken cancellation)
         {
-            await Task.Run(() => extractor.Extract(sourceFile, destFile, ranges, progress));
+            await Task.Run(() => extractor.Extract(sourceFile, destFile, ranges, progress, cancellation));
         }
-        public async Task ExtractAsync(string sourceFile, DirectoryInfo destDirectory,
-            IEnumerable<ILeveledBookmark> ranges, IProgress<ProgressReport> progress)
+        public async Task<IList<FileSystemInfo>> ExtractAsync(string sourceFile, DirectoryInfo destDirectory,
+            IEnumerable<ILeveledBookmark> ranges, IProgress<ProgressReport> progress,
+            CancellationToken cancellation)
         {
-            await Task.Run(() => extractor.Extract(sourceFile, destDirectory, ranges, progress));
+            return await Task.Run(() => extractor.Extract(sourceFile, destDirectory, ranges, progress, cancellation));
         }
         #endregion
 

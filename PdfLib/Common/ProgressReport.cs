@@ -15,6 +15,7 @@ namespace CX.PdfLib.Common
         Extracting,
         GettingBookmarks,
         Merging,
+        ChoosingDestination,
         Finished
     }
 

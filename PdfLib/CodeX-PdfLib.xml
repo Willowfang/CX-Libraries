@@ -177,7 +177,7 @@
             Extract pages from a pdf
             </summary>
         </member>
-        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport})">
+        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport},System.Threading.CancellationToken)">
             <summary>
             Extract multiple page ranges into separate files
             </summary>
@@ -185,8 +185,9 @@
             <param name="destDirectory">Directory to extract the files to</param>
             <param name="ranges">Ranges to extract</param>
             <param name="progress">Progress reporter for async calls</param>
+            <param name="cancellation">Token for process cancellation</param>
         </member>
-        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport})">
+        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport},System.Threading.CancellationToken)">
             <summary>
             Extract multiple page ranges into one file
             </summary>
@@ -194,6 +195,7 @@
             <param name="destFile">File to extract into</param>
             <param name="ranges">Page ranges to extract</param>
             <param name="progress">Progress reporter for async calls</param>
+            <param name="cancellation">Token for process cancellation</param>
         </member>
         <member name="M:CX.PdfLib.Services.IManipulator.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark})">
             <summary>
@@ -211,7 +213,7 @@
             <param name="destFile">File to extract into</param>
             <param name="ranges">Page ranges to extract</param>
         </member>
-        <member name="M:CX.PdfLib.Services.IManipulator.ExtractAsync(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport})">
+        <member name="M:CX.PdfLib.Services.IManipulator.ExtractAsync(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport},System.Threading.CancellationToken)">
             <summary>
             Extract multiple page ranges into separate files asynchronously
             </summary>
@@ -219,8 +221,9 @@
             <param name="destDirectory">Directory to extract the files to</param>
             <param name="ranges">Ranges to extract</param>
             <param name="progress">Optional progress reporter</param>
+            <param name="cancellation">Token for operation cancellation</param>
         </member>
-        <member name="M:CX.PdfLib.Services.IManipulator.ExtractAsync(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport})">
+        <member name="M:CX.PdfLib.Services.IManipulator.ExtractAsync(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport},System.Threading.CancellationToken)">
             <summary>
             Extract multiple page ranges into one file asynchronously
             </summary>
@@ -228,6 +231,7 @@
             <param name="destFile">File to extract into</param>
             <param name="ranges">Page ranges to extract</param>
             <param name="progress">Optional progress reporter</param>
+            <param name="cancellation">Token for operation cancellation</param>
         </member>
         <member name="M:CX.PdfLib.Services.IManipulator.MergeWithBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.IMergeInput},System.String,System.Boolean)">
             <summary>
