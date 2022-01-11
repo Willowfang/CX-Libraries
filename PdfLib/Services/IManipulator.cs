@@ -3,6 +3,7 @@ using CX.PdfLib.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CX.PdfLib.Services
@@ -16,7 +17,7 @@ namespace CX.PdfLib.Services
         /// <param name="sourceFile">Path of the file to extract from</param>
         /// <param name="destDirectory">Directory to extract the files to</param>
         /// <param name="ranges">Ranges to extract</param>
-        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges);
+        public IList<FileSystemInfo> Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges);
         /// <summary>
         /// Extract multiple page ranges into one file
         /// </summary>
@@ -31,8 +32,9 @@ namespace CX.PdfLib.Services
         /// <param name="destDirectory">Directory to extract the files to</param>
         /// <param name="ranges">Ranges to extract</param>
         /// <param name="progress">Optional progress reporter</param>
-        public Task ExtractAsync(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges,
-            IProgress<ProgressReport> progress = null);
+        /// <param name="cancellation">Token for operation cancellation</param>
+        public Task<IList<FileSystemInfo>> ExtractAsync(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> ranges,
+            IProgress<ProgressReport> progress = null, CancellationToken cancellation = default(CancellationToken));
         /// <summary>
         /// Extract multiple page ranges into one file asynchronously
         /// </summary>
@@ -40,8 +42,9 @@ namespace CX.PdfLib.Services
         /// <param name="destFile">File to extract into</param>
         /// <param name="ranges">Page ranges to extract</param>
         /// <param name="progress">Optional progress reporter</param>
+        /// <param name="cancellation">Token for operation cancellation</param>
         public Task ExtractAsync(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> ranges,
-            IProgress<ProgressReport> progress = null);
+            IProgress<ProgressReport> progress = null, CancellationToken cancellation = default(CancellationToken));
         #endregion
 
         #region BOOKMARKS
@@ -81,8 +84,10 @@ namespace CX.PdfLib.Services
         /// and titles</param>
         /// <param name="outputPath">Output file path</param>
         /// <param name="addPageNumbers">If true, add page numbers to new document</param>
-        public void MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers);
-        public Task MergeWithBookmarksAsync(IList<IMergeInput> inputs, string outputPath,
-            bool addPageNumbers, IProgress<ProgressReport> progress = null);
+        /// <returns>List of created files</returns>
+        public IList<string> MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers);
+        public Task<IList<string>> MergeWithBookmarksAsync(IList<IMergeInput> inputs, string outputPath,
+            bool addPageNumbers, IProgress<ProgressReport> progress = null, 
+            CancellationToken cancellation = default(CancellationToken));
     }
 }

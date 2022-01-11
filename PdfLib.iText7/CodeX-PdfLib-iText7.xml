@@ -41,6 +41,14 @@
             </summary>
             <returns>IExtractor service</returns>
         </member>
+        <member name="M:CX.PdfLib.iText7.OperatorBase.CancellationCheck(System.Threading.CancellationToken)">
+            <summary>
+            Returns true if canceled, otherwise false. Performs
+            <see cref="M:CX.PdfLib.iText7.OperatorBase.CleanUp"/> if operation has been canceled.
+            </summary>
+            <param name="cancellation"></param>
+            <returns></returns>
+        </member>
         <member name="T:CX.PdfLib.iText7.Signer">
             <summary>
             Default implementation for ISigner service

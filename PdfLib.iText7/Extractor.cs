@@ -9,13 +9,14 @@ using CX.PdfLib.Extensions;
 using System.IO;
 using CX.PdfLib.Common;
 using System.Threading;
+using iText.Forms;
 
 namespace CX.PdfLib.iText7
 {
     /// <summary>
     /// Implementation of <see cref="IExtractor"/> service
     /// </summary>
-    public class Extractor : IExtractor
+    public class Extractor : OperatorBase, IExtractor
     {
         /// <summary>
         /// Get new instance as service
@@ -23,10 +24,13 @@ namespace CX.PdfLib.iText7
         /// <returns>IExtractor service</returns>
         public static IExtractor GetService() => new Extractor();
 
-        public void Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> extractables,
-            IProgress<ProgressReport> progress = null)
+        public IList<FileSystemInfo> Extract(string sourceFile, DirectoryInfo destDirectory, IEnumerable<ILeveledBookmark> extractables,
+            IProgress<ProgressReport> progress = null, CancellationToken cancellation = default(CancellationToken))
         {
+            PrepareCleanUp();
+
             var doc = new PdfDocument(new PdfReader(sourceFile));
+            OpenedDocuments.Add(doc);
 
             int totalCount = extractables.Count();
             int currentCount = 0;
@@ -36,12 +40,23 @@ namespace CX.PdfLib.iText7
                     progress.Report(new ProgressReport(currentCount * 100 / totalCount, ProgressPhase.Extracting,
                         bm.Title));
 
-                // Extract pages into a file
                 FileInfo destFile = new FileInfo(Path.Combine(destDirectory.FullName,
                     bm.Title.ReplaceIllegal() + ".pdf"));
+
+                // Create the destination and add it to created paths,
+                // if it does not already exist
+                if (destDirectory.Exists == false)
+                    CreatedPaths.Add(destDirectory);
                 destDirectory.Create();
+                
                 var split = new ExtSplitter(doc, pageRange => new PdfWriter(destFile));
                 var result = split.ExtractPages(bm.Pages);
+                Flatten(result);
+
+                OpenedDocuments.Add(result);
+                CreatedPaths.Add(destFile);
+
+                if (CancellationCheck(cancellation)) return CreatedPaths;
 
                 // Remove bookmarks copied with merging
                 result.GetCatalog().Remove(PdfName.Outlines);
@@ -56,6 +71,9 @@ namespace CX.PdfLib.iText7
                     IList<ILeveledBookmark> levelAdjustedChildren = children.AdjustLevels(1 - children[0].Level);
                     Bookmarker.AddLeveledBookmarks(Bookmarker.AdjustBookmarksExtract(levelAdjustedChildren, bm.Pages), result);
                 }
+
+                if (CancellationCheck(cancellation)) return CreatedPaths;
+
                 result.Close();
 
                 currentCount++;
@@ -63,13 +81,19 @@ namespace CX.PdfLib.iText7
 
             doc.Close();
 
+            if (CancellationCheck(cancellation)) return CreatedPaths;
+
             if (progress != null)
                 progress.Report(new ProgressReport(100, ProgressPhase.Finished));
+
+            return CreatedPaths;
         }
 
         public void Extract(string sourceFile, FileInfo destFile, IEnumerable<ILeveledBookmark> extractables,
-            IProgress<ProgressReport> progress = null)
+            IProgress<ProgressReport> progress = null, CancellationToken cancellation = default(CancellationToken))
         {
+            PrepareCleanUp();
+
             int totalCount = extractables.Count();
 
             if (progress != null && totalCount > 50)
@@ -77,6 +101,7 @@ namespace CX.PdfLib.iText7
                     Path.GetFileNameWithoutExtension(sourceFile)));
 
             var doc = new PdfDocument(new PdfReader(sourceFile));
+            OpenedDocuments.Add(doc);
 
             // Get all pages in all the ranges
             List<int> pages = new List<int>();
@@ -88,6 +113,12 @@ namespace CX.PdfLib.iText7
             // Extract pages into a file
             var split = new ExtSplitter(doc, pageRange => new PdfWriter(destFile.FullName));
             var result = split.ExtractPages(pages);
+            Flatten(result);
+
+            OpenedDocuments.Add(result);
+            CreatedPaths.Add(destFile);
+
+            if (CancellationCheck(cancellation)) return;
 
             if (progress != null && totalCount > 50)
                 progress.Report(new ProgressReport(50, ProgressPhase.AddingBookmarks,
@@ -107,9 +138,17 @@ namespace CX.PdfLib.iText7
 
             result.Close();
 
+            if (CancellationCheck(cancellation)) return;
+
             if (progress != null)
                 progress.Report(new ProgressReport(100, ProgressPhase.Finished));
 
+        }
+
+        private void Flatten(PdfDocument doc)
+        {
+            PdfAcroForm form = PdfAcroForm.GetAcroForm(doc, true);
+            form.FlattenFields();
         }
 
         internal class ExtSplitter : PdfSplitter

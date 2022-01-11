@@ -10,6 +10,7 @@ using iText.Layout;
 using iText.Layout.Element;
 using System;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace CX.PdfLib.iText7
 {
@@ -32,21 +33,23 @@ namespace CX.PdfLib.iText7
         }
 
         #region EXTRACTION
-        public void Extract(string sourceFile, DirectoryInfo destDirectory,
+        public IList<FileSystemInfo> Extract(string sourceFile, DirectoryInfo destDirectory,
             IEnumerable<ILeveledBookmark> ranges)
             => extractor.Extract(sourceFile, destDirectory, ranges);
         public void Extract(string sourceFile, FileInfo destFile,
             IEnumerable<ILeveledBookmark> ranges)
             => extractor.Extract(sourceFile, destFile, ranges);
         public async Task ExtractAsync(string sourceFile, FileInfo destFile,
-            IEnumerable<ILeveledBookmark> ranges, IProgress<ProgressReport> progress)
+            IEnumerable<ILeveledBookmark> ranges, IProgress<ProgressReport> progress,
+            CancellationToken cancellation)
         {
-            await Task.Run(() => extractor.Extract(sourceFile, destFile, ranges, progress));
+            await Task.Run(() => extractor.Extract(sourceFile, destFile, ranges, progress, cancellation));
         }
-        public async Task ExtractAsync(string sourceFile, DirectoryInfo destDirectory,
-            IEnumerable<ILeveledBookmark> ranges, IProgress<ProgressReport> progress)
+        public async Task<IList<FileSystemInfo>> ExtractAsync(string sourceFile, DirectoryInfo destDirectory,
+            IEnumerable<ILeveledBookmark> ranges, IProgress<ProgressReport> progress,
+            CancellationToken cancellation)
         {
-            await Task.Run(() => extractor.Extract(sourceFile, destDirectory, ranges, progress));
+            return await Task.Run(() => extractor.Extract(sourceFile, destDirectory, ranges, progress, cancellation));
         }
         #endregion
 
@@ -111,32 +114,49 @@ namespace CX.PdfLib.iText7
         }
         #endregion
 
-        public void MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers)
+        public IList<string> MergeWithBookmarks(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers)
             => BookmarkMerge(inputs, outputPath, addPageNumbers);
-        public async Task MergeWithBookmarksAsync(IList<IMergeInput> inputs, string outputPath,
-            bool addPageNumbers, IProgress<ProgressReport> progress)
+        public async Task<IList<string>> MergeWithBookmarksAsync(IList<IMergeInput> inputs, string outputPath,
+            bool addPageNumbers, IProgress<ProgressReport> progress, 
+            CancellationToken cancellation = default(CancellationToken))
         {
-            await Task.Run(() => BookmarkMerge(inputs, outputPath, addPageNumbers, progress));
+            return await Task.Run(() => BookmarkMerge(inputs, outputPath, addPageNumbers, progress, cancellation));
         }
 
-        private void BookmarkMerge(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers,
-            IProgress<ProgressReport> progress = null)
+        private IList<string> BookmarkMerge(IList<IMergeInput> inputs, string outputPath, bool addPageNumbers,
+            IProgress<ProgressReport> progress = null, CancellationToken cancellation = default(CancellationToken))
         {
-            int totalStages = 4;
+            List<string> createdFiles = new List<string>();
+
+            int totalStages = 5;
             if (addPageNumbers) totalStages++;
 
             PdfDocument doc = new PdfDocument(new PdfWriter(outputPath));
 
             // Stage 1: convert Word-documents
-            progress?.Report(new ProgressReport(0, ProgressPhase.Converting));
+            progress?.Report(new ProgressReport(1* 100 / totalStages, ProgressPhase.Converting));
             IList<string> converted = converter.Convert(GetMergePaths(inputs), null);
 
+            createdFiles.AddRange(converted.Except(GetMergePaths(inputs)));
+            if (cancellation.IsCancellationRequested)
+            {
+                doc.Close();
+                return createdFiles;
+            }
+
             // Stage 2: merge documents
-            progress?.Report(new ProgressReport(1 / totalStages * 100, ProgressPhase.Merging));
+            progress?.Report(new ProgressReport(2 * 100 / totalStages, ProgressPhase.Merging));
             var (startPages, outputPageCount) = DoMerge(converted, doc);
 
+            createdFiles.Add(outputPath);
+            if (cancellation.IsCancellationRequested)
+            {
+                doc.Close();
+                return createdFiles;
+            }
+
             // Stage 3: gather and adjust info for bookmarks
-            progress?.Report(new ProgressReport(2 / totalStages * 100, ProgressPhase.GettingBookmarks));
+            progress?.Report(new ProgressReport(3 * 100 / totalStages, ProgressPhase.GettingBookmarks));
             List<ILeveledBookmark> bookmarks = new List<ILeveledBookmark>();
             for (int i = 0; i < inputs.Count; i++)
             {
@@ -151,15 +171,21 @@ namespace CX.PdfLib.iText7
                 }
             }
 
+            if (cancellation.IsCancellationRequested)
+            {
+                doc.Close();
+                return createdFiles;
+            }
+
             // Stage 4: Add bookmarks to document
-            progress?.Report(new ProgressReport(3 / totalStages * 100, ProgressPhase.AddingBookmarks));
+            progress?.Report(new ProgressReport(4 * 100 / totalStages, ProgressPhase.AddingBookmarks));
             doc.GetCatalog().Remove(PdfName.Outlines);
             Bookmarker.AddLeveledBookmarks(Bookmarker.GetAllPages(bookmarks, outputPageCount), doc);
 
             // Stage 5: add page numbers
             if (addPageNumbers)
             {
-                progress?.Report(new ProgressReport(4 / totalStages * 100, ProgressPhase.AddingPageNumbers));
+                progress?.Report(new ProgressReport(5 * 100 / totalStages, ProgressPhase.AddingPageNumbers));
                 Document document = new Document(doc);
                 AddPageNumbers(document);
                 document.Close();
@@ -167,6 +193,7 @@ namespace CX.PdfLib.iText7
 
             if (!doc.IsClosed()) doc.Close();
             progress?.Report(new ProgressReport(100, ProgressPhase.Finished));
+            return createdFiles;
         }
         private List<string> GetMergePaths(IList<IMergeInput> inputs)
         {
