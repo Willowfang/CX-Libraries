@@ -133,26 +133,101 @@
             Title of the bookmark to add
             </summary>
         </member>
-        <member name="M:CX.PdfLib.Services.IBookmarker.FindBookmarks(System.String)">
+        <member name="M:CX.PdfLib.Services.IBookmarkService.FindBookmarks(System.String)">
             <summary>
             Get leveled bookmarks from a document
             </summary>
             <param name="sourcePdf">Document to get the bookmarks from</param>
             <returns>A list of bookmarks</returns>
         </member>
-        <member name="M:CX.PdfLib.Services.IBookmarker.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
+        <member name="M:CX.PdfLib.Services.IBookmarkService.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
             <summary>
-            Add leveled bookmarks for a document
+            Insert leveled bookmarks into a document
             </summary>
             <param name="bookmarks">Bookmarks to add</param>
             <param name="documentPath">The pdf to add the bookmarks to</param>
         </member>
-        <member name="T:CX.PdfLib.Services.IConverter">
+        <member name="T:CX.PdfLib.Services.IExtractionService">
+            <summary>
+            Extract pages from a pdf
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.IExtractionService.Extract(CX.PdfLib.Common.ExtractionOptions)">
+            <summary>
+            Extract bookmarks from documents into one or more new documents
+            </summary>
+            <param name="options">Options for extraction</param>
+            <returns>A list of extracted files</returns>
+        </member>
+        <member name="T:CX.PdfLib.Services.IMergingService">
+            <summary>
+            Service for merging pdf-files into one
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.IMergingService.Merge(System.Collections.Generic.IList{System.String},System.String)">
+            <summary>
+            Merge pdf documents into one document
+            </summary>
+            <param name="sourcePaths">Source files in order of merging</param>
+            <param name="outputPath">Output file path</param>
+            <returns>Merged documents' start pages in the new document</returns>
+        </member>
+        <member name="M:CX.PdfLib.Services.IMergingService.Merge(System.Collections.Generic.IList{System.String},System.String,System.Threading.CancellationToken)">
+            <summary>
+            Merge pdf documents into one document
+            </summary>
+            <param name="sourcePaths">Source files in order of merging</param>
+            <param name="outputPath">Output file path</param>
+            <param name="token">Token for method cancellation</param>
+            <returns>Merged documents' start pages in the new document</returns>
+        </member>
+        <member name="M:CX.PdfLib.Services.IMergingService.MergeWithOptions(CX.PdfLib.Common.MergingOptions)">
+            <summary>
+            Merge pdf documents into one document using provided options
+            </summary>
+            <param name="options">Options for merging</param>
+            <returns>Files that were created</returns>
+        </member>
+        <member name="T:CX.PdfLib.Services.IPdfAConvertService">
+            <summary>
+            Convert a regular pdf into pdf/a
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.IPdfAConvertService.Convert(System.IO.FileSystemInfo,System.IO.DirectoryInfo,System.Threading.CancellationToken)">
+            <summary>
+            Convert to pdf/a
+            </summary>
+            <param name="source">File or folder</param>
+            <param name="destinationDirectory"></param>
+            <param name="cancellation"></param>
+            <returns></returns>
+        </member>
+        <member name="T:CX.PdfLib.Services.ISigningService">
+            <summary>
+            Service for manipulating digital signatures
+            </summary>
+        </member>
+        <member name="M:CX.PdfLib.Services.ISigningService.RemoveSignature(System.IO.FileInfo,System.IO.FileInfo)">
+            <summary>
+            Remove digital signatures from a document.
+            </summary>
+            <param name="source"></param>
+            <param name="destination"></param>
+        </member>
+        <member name="M:CX.PdfLib.Services.ISigningService.RemoveSignature(System.IO.FileInfo,System.IO.FileInfo,System.Threading.CancellationToken)">
+            <summary>
+            Remove digital signatures from a document.
+            </summary>
+            <param name="source"></param>
+            <param name="destination"></param>
+            <param name="token"></param>
+        </member>
+        <member name="T:CX.PdfLib.Services.IWordConvertService">
             <summary>
             Convert files to pdf
             </summary>
         </member>
-        <member name="M:CX.PdfLib.Services.IConverter.Convert(System.String,System.String)">
+        <member name="M:CX.PdfLib.Services.IWordConvertService.Convert(System.String,System.String)">
             <summary>
             Convert a single document
             </summary>
@@ -162,7 +237,18 @@
             <remarks>The newly created document will be saved with the same name as the
             original file (with extension .pdf)</remarks>
         </member>
-        <member name="M:CX.PdfLib.Services.IConverter.Convert(System.Collections.Generic.IList{System.String},System.String)">
+        <member name="M:CX.PdfLib.Services.IWordConvertService.Convert(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Convert a single document asynchronously
+            </summary>
+            <param name="filePath">Path to the document to convert</param>
+            <param name="outputDirectory">Directory to save document in</param>
+            <param name="token">Token for method cancellation</param>
+            <returns>Path to the converted document</returns>
+            <remarks>The newly created document will be saved with the same name as the
+            original file (with extension .pdf)</remarks>
+        </member>
+        <member name="M:CX.PdfLib.Services.IWordConvertService.Convert(System.Collections.Generic.IList{System.String},System.String)">
             <summary>
             Convert multiple documents
             </summary>
@@ -172,121 +258,16 @@
             // <remarks>Newly created documents will be saved with the same name as the
             original files (with extension .pdf)</remarks>
         </member>
-        <member name="T:CX.PdfLib.Services.IExtractor">
+        <member name="M:CX.PdfLib.Services.IWordConvertService.Convert(System.Collections.Generic.IList{System.String},System.String,System.Threading.CancellationToken)">
             <summary>
-            Extract pages from a pdf
+            Convert multiple documents asynchronously
             </summary>
-        </member>
-        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport},System.Threading.CancellationToken)">
-            <summary>
-            Extract multiple page ranges into separate files
-            </summary>
-            <param name="sourceFile">Path of the file to extract from</param>
-            <param name="destDirectory">Directory to extract the files to</param>
-            <param name="ranges">Ranges to extract</param>
-            <param name="progress">Progress reporter for async calls</param>
-            <param name="cancellation">Token for process cancellation</param>
-        </member>
-        <member name="M:CX.PdfLib.Services.IExtractor.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport},System.Threading.CancellationToken)">
-            <summary>
-            Extract multiple page ranges into one file
-            </summary>
-            <param name="sourceFile">File to extract from</param>
-            <param name="destFile">File to extract into</param>
-            <param name="ranges">Page ranges to extract</param>
-            <param name="progress">Progress reporter for async calls</param>
-            <param name="cancellation">Token for process cancellation</param>
-        </member>
-        <member name="M:CX.PdfLib.Services.IManipulator.Extract(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark})">
-            <summary>
-            Extract multiple page ranges into separate files
-            </summary>
-            <param name="sourceFile">Path of the file to extract from</param>
-            <param name="destDirectory">Directory to extract the files to</param>
-            <param name="ranges">Ranges to extract</param>
-        </member>
-        <member name="M:CX.PdfLib.Services.IManipulator.Extract(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark})">
-            <summary>
-            Extract multiple page ranges into one file
-            </summary>
-            <param name="sourceFile">File to extract from</param>
-            <param name="destFile">File to extract into</param>
-            <param name="ranges">Page ranges to extract</param>
-        </member>
-        <member name="M:CX.PdfLib.Services.IManipulator.ExtractAsync(System.String,System.IO.DirectoryInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport},System.Threading.CancellationToken)">
-            <summary>
-            Extract multiple page ranges into separate files asynchronously
-            </summary>
-            <param name="sourceFile">Path of the file to extract from</param>
-            <param name="destDirectory">Directory to extract the files to</param>
-            <param name="ranges">Ranges to extract</param>
-            <param name="progress">Optional progress reporter</param>
-            <param name="cancellation">Token for operation cancellation</param>
-        </member>
-        <member name="M:CX.PdfLib.Services.IManipulator.ExtractAsync(System.String,System.IO.FileInfo,System.Collections.Generic.IEnumerable{CX.PdfLib.Services.Data.ILeveledBookmark},System.IProgress{CX.PdfLib.Common.ProgressReport},System.Threading.CancellationToken)">
-            <summary>
-            Extract multiple page ranges into one file asynchronously
-            </summary>
-            <param name="sourceFile">File to extract from</param>
-            <param name="destFile">File to extract into</param>
-            <param name="ranges">Page ranges to extract</param>
-            <param name="progress">Optional progress reporter</param>
-            <param name="cancellation">Token for operation cancellation</param>
-        </member>
-        <member name="M:CX.PdfLib.Services.IManipulator.MergeWithBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.IMergeInput},System.String,System.Boolean)">
-            <summary>
-            Merge documents into one pdf. Create top-level bookmarks for merged
-            files and assign them given titles. Retain all bookmarks from original documents
-            with adjusted destination pages.
-            </summary>
-            <param name="inputs">Inputs for the merge, includes merging files
-            and titles</param>
-            <param name="outputPath">Output file path</param>
-            <param name="addPageNumbers">If true, add page numbers to new document</param>
-            <returns>List of created files</returns>
-        </member>
-        <member name="T:CX.PdfLib.Services.IMerger">
-            <summary>
-            Service for merging pdf-files into one
-            </summary>
-        </member>
-        <member name="M:CX.PdfLib.Services.IMerger.Merge(System.Collections.Generic.IList{System.String},System.String)">
-            <summary>
-            Merge pdf documents into one document
-            </summary>
-            <param name="sourcePaths">Source files in order of merging</param>
-            <param name="outputPath">Output file path</param>
-            <returns>Merged documents' start pages in the new document</returns>
-        </member>
-        <member name="T:CX.PdfLib.Services.ISigner">
-            <summary>
-            Service for manipulating digital signatures
-            </summary>
-        </member>
-        <member name="M:CX.PdfLib.Services.ISigner.RemoveSignature(System.String,System.IO.DirectoryInfo,System.String)">
-            <summary>
-            Remove digital signatures from a document. Output file will be saved in the given directory
-            with its name formatted as: <paramref name="sourcePath"/>_<paramref name="postFix"/>.pdf
-            </summary>
-            <param name="sourcePath">Path of the source file</param>
-            <param name="destinationDirectory">Directory to save the new file in</param>
-            <param name="postFix">Postfix for the new file name</param>
-        </member>
-        <member name="M:CX.PdfLib.Services.ISigner.RemoveSignature(System.String,System.IO.FileInfo)">
-            <summary>
-            Remove digital signatures from a document.
-            </summary>
-            <param name="sourcePath">Path of the source file</param>
-            <param name="outputFile">Output file</param>
-        </member>
-        <member name="M:CX.PdfLib.Services.ISigner.RemoveSignature(System.String[],System.IO.DirectoryInfo,System.String)">
-            <summary>
-            Remove digital signatures from multiple documents. Output files will be saved in the given directory
-            with their names formatted as: <paramref name="sourcePaths"/>_<paramref name="postFix"/>.pdf
-            </summary>
-            <param name="sourcePaths">Paths of the source files</param>
-            <param name="destinationDirectory">Directory to save the new files in</param>
-            <param name="postFix">Postfix for new file names</param>
+            <param name="filePaths">Documents to convert</param>
+            <param name="outputDirectory">Directory to save the documents in</param>
+            <param name="token">Token for method cancellation</param>
+            <returns>Paths to converted documents</returns>
+            // <remarks>Newly created documents will be saved with the same name as the
+            original files (with extension .pdf)</remarks>
         </member>
     </members>
 </doc>
