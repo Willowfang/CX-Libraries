@@ -28,5 +28,20 @@ namespace CX.PdfLib.Extensions
 
             return adjusted;
         }
+
+        public static bool IsChild(this ILeveledBookmark current, IEnumerable<ILeveledBookmark> bookmarks)
+        {
+            foreach (ILeveledBookmark bookmark in bookmarks)
+            {
+                if (current.Level > bookmark.Level 
+                    && current.StartPage >= bookmark.StartPage 
+                    && current.EndPage <= bookmark.EndPage)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

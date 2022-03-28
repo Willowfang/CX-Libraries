@@ -4,54 +4,65 @@
         <name>CodeX-PdfLib-iText7</name>
     </assembly>
     <members>
-        <member name="M:CX.PdfLib.iText7.Bookmarker.FindBookmarks(System.String)">
+        <member name="M:CX.PdfLib.iText7.BookmarkService.FindBookmarks(System.String)">
             <summary>
             Get all bookmarks from a document
             </summary>
             <param name="sourcePdf">Source document path</param>
             <returns></returns>
         </member>
-        <member name="M:CX.PdfLib.iText7.Bookmarker.FindLeveledBookmarks(iText.Kernel.Pdf.PdfDocument)">
-            <summary>
-            Find and return bookmarks with their levels
-            </summary>
-            <param name="sourceDoc">Document to search</param>
-            <returns>A list of leveled bookmarks</returns>
-        </member>
-        <member name="M:CX.PdfLib.iText7.Bookmarker.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
+        <member name="M:CX.PdfLib.iText7.BookmarkService.AddBookmarks(System.Collections.Generic.IList{CX.PdfLib.Services.Data.ILeveledBookmark},System.String)">
             <summary>
             Add bookmarks to a document
             </summary>
             <param name="bookmarks">Bookmarks to add</param>
             <param name="documentPath">Destination document path</param>
         </member>
-        <member name="T:CX.PdfLib.iText7.ConverterWord">
+        <member name="M:CX.PdfLib.iText7.ExtractionService.Extract(CX.PdfLib.Common.ExtractionOptions)">
             <summary>
-            Implementation of <see cref="T:CX.PdfLib.Services.IConverter"/> service
+            Extract a pdf file according to <see cref="T:CX.PdfLib.Common.ExtractionOptions"/>.
             </summary>
+            <param name="options"></param>
+            <returns>A list of created files and folders (of which all might not exist)</returns>
+            <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="T:CX.PdfLib.iText7.Extractor">
-            <summary>
-            Implementation of <see cref="T:CX.PdfLib.Services.IExtractor"/> service
-            </summary>
-        </member>
-        <member name="M:CX.PdfLib.iText7.Extractor.GetService">
-            <summary>
-            Get new instance as service
-            </summary>
-            <returns>IExtractor service</returns>
-        </member>
-        <member name="M:CX.PdfLib.iText7.OperatorBase.CancellationCheck(System.Threading.CancellationToken)">
+        <member name="M:CX.PdfLib.iText7.OperatorBase`1.CheckIfCancelledAndCleanUp(System.Threading.CancellationToken)">
             <summary>
             Returns true if canceled, otherwise false. Performs
-            <see cref="M:CX.PdfLib.iText7.OperatorBase.CleanUp"/> if operation has been canceled.
+            <see cref="M:CX.PdfLib.iText7.OperatorBase`1.CleanUp"/> if operation has been canceled.
             </summary>
             <param name="cancellation"></param>
             <returns></returns>
         </member>
-        <member name="T:CX.PdfLib.iText7.Signer">
+        <member name="T:CX.PdfLib.iText7.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.iText7.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:CX.PdfLib.iText7.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.iText7.SigningService">
             <summary>
             Default implementation for ISigner service
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.iText7.Utilities">
+            <summary>
+            Various utility methods related to pdfs. Handles debug logging.
+            </summary>
+        </member>
+        <member name="T:CX.PdfLib.iText7.WordConvertService">
+            <summary>
+            Implementation of <see cref="T:CX.PdfLib.Services.IWordConvertService"/> service
             </summary>
         </member>
     </members>
