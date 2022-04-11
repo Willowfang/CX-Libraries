@@ -15,16 +15,18 @@ namespace CX.PdfLib.Common
         public IEnumerable<IMergeInput> Inputs { get; }
         public FileInfo OutputFile { get; }
         public bool AddPageNumbers { get; }
+        public bool ConvertWordDocuments { get; }
         public IProgress<ProgressReport> Progress { get; set; }
         [JsonIgnore]
         public CancellationToken Cancellation { get; set; }
 
         public MergingOptions(IEnumerable<IMergeInput> inputs, FileInfo outputFile,
-            bool addPageNumbers)
+            bool addPageNumbers, bool convertWordDocuments)
         {
             Inputs = inputs;
             OutputFile = outputFile;
             AddPageNumbers = addPageNumbers;
+            ConvertWordDocuments = convertWordDocuments;
             Progress = null;
             Cancellation = CancellationToken.None;
         }

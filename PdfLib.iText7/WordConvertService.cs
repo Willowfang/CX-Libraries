@@ -63,18 +63,18 @@ namespace CX.PdfLib.iText7
                 app.Visible = false;
                 app.ScreenUpdating = false;
 
-                if (Directory.Exists(outputDirectory) == false)
-                {
-                    CreatedPaths.Add(new DirectoryInfo(outputDirectory));
-                }
-
                 logbook.Write($"Conversion started with WordApplication '{app.Name}'.", LogLevel.Debug);
 
                 try
                 {
                     foreach (string inputPath in filePaths)
                     {
-                        if (CheckIfFileExistsAndCleanUp(inputPath))
+                        if (string.IsNullOrEmpty(inputPath))
+                        {
+                            converted.Add(inputPath);
+                            continue;
+                        }
+                        if (CheckIfFileDoesNotExistAndCleanUp(inputPath))
                         {
                             throw new ArgumentException($"File at {inputPath} does not exist.");
                         }
@@ -111,6 +111,14 @@ namespace CX.PdfLib.iText7
 
                 if (outputDirectory == null)
                     outputDirectory = Path.GetDirectoryName(inputPath);
+
+                if (Directory.Exists(outputDirectory) == false)
+                {
+                    DirectoryInfo outDir = new DirectoryInfo(outputDirectory);
+                    outDir.Create();
+                    CreatedPaths.Add(outDir);
+                }
+
                 string outputPath = Path.Combine(outputDirectory,
                     Path.GetFileNameWithoutExtension(inputPath) + ".pdf");
 

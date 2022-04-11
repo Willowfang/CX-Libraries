@@ -45,7 +45,7 @@ namespace CX.PdfLib.iText7
             {
                 try
                 {
-                    if (CheckIfFileExistsAndCleanUp(source))
+                    if (CheckIfFileDoesNotExistAndCleanUp(source))
                     {
                         throw new ArgumentException($"File at {source.FullName} does not exist.");
                     }

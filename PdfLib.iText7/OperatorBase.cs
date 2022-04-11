@@ -24,20 +24,20 @@ namespace CX.PdfLib.iText7
             OpenedDocuments = new();
         }
 
-        protected bool CheckIfFileExistsAndCleanUp(FileInfo file)
+        protected bool CheckIfFileDoesNotExistAndCleanUp(FileInfo file)
         {
-            return CheckIfFileExistsAndCleanUp(file.FullName);
+            return CheckIfFileDoesNotExistAndCleanUp(file.FullName);
         }
-        protected bool CheckIfFileExistsAndCleanUp(string filePath)
+        protected bool CheckIfFileDoesNotExistAndCleanUp(string filePath)
         {
             if (filePath == null || File.Exists(filePath) == false)
             {
                 logbook.Write($"File does not exist at {filePath}. Cleaning up.", LogLevel.Warning);
                 CleanUp();
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         /// <summary>

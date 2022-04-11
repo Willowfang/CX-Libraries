@@ -53,6 +53,7 @@ namespace CX.PdfLib.iText7
 
             // Created in-class
             private PdfDocument product;
+            private bool internalProduct;
             private PdfMerger merger;
             private readonly List<int> startPages;
             private int currentStartPage;
@@ -62,6 +63,16 @@ namespace CX.PdfLib.iText7
             {
                 this.sourcePaths = sourcePaths;
                 this.outputPath = outputPath;
+                this.token = token;
+                startPages = new List<int>();
+                currentStartPage = 1;
+            }
+            
+            internal MergingWorker(IList<string> sourcePaths, PdfDocument product,
+                CancellationToken token, ILogbook logbook) : base(logbook)
+            {
+                this.sourcePaths = sourcePaths;
+                this.product = product;
                 this.token = token;
                 startPages = new List<int>();
                 currentStartPage = 1;
@@ -82,12 +93,16 @@ namespace CX.PdfLib.iText7
 
             private IList<int> ExecuteMerge()
             {
-                product = new PdfDocument(new PdfReader(outputPath));
-                OpenedDocuments.Add(product);
+                if (product == null)
+                {
+                    product = new PdfDocument(new PdfWriter(outputPath));
+                    OpenedDocuments.Add(product);
+                    internalProduct = true;
+                }
                 merger = new PdfMerger(product).SetCloseSourceDocuments(true);
 
-                string dir = Path.GetDirectoryName(outputPath);
-                if (Directory.Exists(dir) == false)
+                string dir = string.IsNullOrEmpty(outputPath) ? null : Path.GetDirectoryName(outputPath);
+                if (dir != null && Directory.Exists(dir) == false)
                 {
                     Directory.CreateDirectory(dir);
                     CreatedPaths.Add(new DirectoryInfo(dir));
@@ -97,7 +112,12 @@ namespace CX.PdfLib.iText7
                 {
                     foreach (string path in sourcePaths)
                     {
-                        if (CheckIfFileExistsAndCleanUp(path))
+                        if (string.IsNullOrEmpty(path))
+                        {
+                            startPages.Add(currentStartPage);
+                            continue;
+                        }
+                        if (CheckIfFileDoesNotExistAndCleanUp(path))
                         {
                             throw new ArgumentException($"File at {path} does not exist.");
                         }
@@ -114,6 +134,11 @@ namespace CX.PdfLib.iText7
                     logbook.Write($"Merging failed at {nameof(MergingWorker)}.", LogLevel.Error, e);
                     CleanUp();
                     throw;
+                }
+                finally
+                {
+                    if (internalProduct == true)
+                        product.Close();
                 }
 
                 return startPages;
@@ -143,7 +168,7 @@ namespace CX.PdfLib.iText7
             private readonly Utilities utilities;
             private int totalStages;
             private PdfDocument destination;
-            private IList<string> convertedFilesAsPaths;
+            private IList<string> filesAsPaths;
             private IList<int> startPages;
             private int outputPageCount;
             private List<ILeveledBookmark> bookmarks;
@@ -186,16 +211,21 @@ namespace CX.PdfLib.iText7
 
                 options.Progress?.Report(new ProgressReport(1 * 100 / totalStages, ProgressPhase.Converting));
 
-                await ConvertWordFiles();
+                filesAsPaths = options.Inputs.Select(x => x.FilePath).ToList();
+
+                if (options.ConvertWordDocuments)
+                {
+                    await ConvertWordFiles();
+                }
 
                 if (CheckIfCancelledAndCleanUp(options.Cancellation)) return null;
 
                 options.Progress?.Report(new ProgressReport(2 * 100 / totalStages, ProgressPhase.Merging));
 
-                MergeFiles();
-
                 destination = new PdfDocument(new PdfWriter(options.OutputFile));
                 OpenedDocuments.Add(destination);
+
+                await MergeFiles();
 
                 if (CheckIfCancelledAndCleanUp(options.Cancellation)) return null;
 
@@ -203,19 +233,19 @@ namespace CX.PdfLib.iText7
 
                 options.Progress?.Report(new ProgressReport(3 * 100 / totalStages, ProgressPhase.GettingBookmarks));
 
-                RetrieveAndAdjustBookmarks();
+                await RetrieveAndAdjustBookmarks();
 
                 if (CheckIfCancelledAndCleanUp(options.Cancellation)) return null;
 
                 options.Progress?.Report(new ProgressReport(4 * 100 / totalStages, ProgressPhase.AddingBookmarks));
 
-                InsertBookmarks();
+                await InsertBookmarks();
 
                 if (CheckIfCancelledAndCleanUp(options.Cancellation)) return null;
 
                 if (options.AddPageNumbers)
                 {
-                    AddPageNumbers();
+                    await Task.Run(() => AddPageNumbers());
                 }
 
                 if (destination.IsClosed() == false) destination.Close();
@@ -228,25 +258,25 @@ namespace CX.PdfLib.iText7
             private async Task ConvertWordFiles()
             {
                 List<string> filePaths = options.Inputs.Select(x => x.FilePath).ToList();
-                convertedFilesAsPaths = await wordConvertService.Convert(filePaths, null, options.Cancellation);
+                filesAsPaths = await wordConvertService.Convert(filePaths, null, options.Cancellation);
 
                 if (CheckIfCancelledAndCleanUp(options.Cancellation)) return;
 
-                foreach (string path in convertedFilesAsPaths.Except(filePaths))
+                foreach (string path in filesAsPaths.Except(filePaths))
                 {
                     CreatedPaths.Add(new FileInfo(path));
                 }
             }
 
-            private void MergeFiles()
+            private async Task MergeFiles()
             {
-                MergingWorker merger = new MergingWorker(convertedFilesAsPaths, options.OutputFile.FullName,
+                MergingWorker merger = new MergingWorker(filesAsPaths, destination,
                     options.Cancellation, logbook.BaseLogbook);
 
-                startPages = merger.Merge();
+                startPages = await Task.Run(() => merger.Merge());
             }
 
-            private void RetrieveAndAdjustBookmarks()
+            private async Task RetrieveAndAdjustBookmarks()
             {
                 List<IMergeInput> inputList = options.Inputs.ToList();
 
@@ -259,18 +289,19 @@ namespace CX.PdfLib.iText7
 
                     if (current.FilePath != null && Path.GetExtension(current.FilePath).ToLower() == ".pdf")
                     {
-                        IList<ILeveledBookmark> leveledOriginal = utilities.FindLeveledBookmarks(
-                            new PdfDocument(new PdfReader(current.FilePath))).AdjustLevels(current.Level);
+                        IList<ILeveledBookmark> leveledOriginal = await Task.Run(() 
+                            => utilities.FindLeveledBookmarks(new PdfDocument(new PdfReader(current.FilePath)))
+                            .AdjustLevels(current.Level));
 
-                        bookmarks.AddRange(utilities.AdjustBookmarksMerge(leveledOriginal, startPages[i]));
+                        bookmarks.AddRange(await Task.Run(() => utilities.AdjustBookmarksMerge(leveledOriginal, startPages[i])));
                     }
                 }
             }
 
-            private void InsertBookmarks()
+            private async Task InsertBookmarks()
             {
                 destination.GetCatalog().Remove(PdfName.Outlines);
-                utilities.AddLeveledBookmarks(utilities.GetAllPages(bookmarks, outputPageCount), destination);
+                await Task.Run(() => utilities.AddLeveledBookmarks(utilities.GetAllPages(bookmarks, outputPageCount), destination));
             }
 
             private void AddPageNumbers()

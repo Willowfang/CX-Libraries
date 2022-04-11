@@ -39,6 +39,7 @@ namespace CX.PdfLib.Common
         public CancellationToken Cancellation { get; set; }
         public bool PdfA { get; set; }
         public AnnotationOption Annotations { get; set; }
+        public IEnumerable<string> AnnotationUsersToRemove { get; set; }
 
         public ExtractionOptions(IEnumerable<FileAndExtractables> files, FileSystemInfo destination)
         {
@@ -48,6 +49,7 @@ namespace CX.PdfLib.Common
             Cancellation = CancellationToken.None;
             PdfA = false;
             Annotations = AnnotationOption.Keep;
+            AnnotationUsersToRemove = new List<string>();
         }
 
         public virtual void OnPdfAConversionFinished(PdfAConversionEventArgs e)

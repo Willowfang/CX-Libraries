@@ -152,7 +152,7 @@ namespace CX.PdfLib.iText7
             // Loop through each pair of files and bookmarks to extract
             foreach (FileAndExtractables file in options.Files)
             {
-                OperateOnFile(file);
+                await OperateOnFile(file);
                 if (CheckIfCancelledAndCleanUp(options.Cancellation)) return CreatedPaths;
             }
 
@@ -223,7 +223,7 @@ namespace CX.PdfLib.iText7
             return CreatedPaths;
         }
 
-        private void OperateOnFile(FileAndExtractables file)
+        private async Task OperateOnFile(FileAndExtractables file)
         {
             var doc = new PdfDocument(new PdfReader(file.FilePath));
             OpenedDocuments.Add(doc);
@@ -241,7 +241,7 @@ namespace CX.PdfLib.iText7
                             bookmark.Title));
                     }
 
-                    ExtractAsSeparate(bookmark, doc, file, originalDocumentBookmarks);
+                    await ExtractAsSeparate(bookmark, doc, file, originalDocumentBookmarks);
                     if (CheckIfCancelledAndCleanUp(options.Cancellation)) return;
                 }
             }
@@ -254,7 +254,7 @@ namespace CX.PdfLib.iText7
                 FileInfo destinationFile = new FileInfo(Path.Combine(workingDirectory.FullName,
                     fileName));
 
-                PdfDocument result = ExtractPages(destinationFile, allPages, doc);
+                PdfDocument result = await ExtractPages(destinationFile, allPages, doc);
 
                 OpenedDocuments.Add(result);
                 CreatedPaths.Add(destinationFile);
@@ -268,13 +268,13 @@ namespace CX.PdfLib.iText7
             doc.Close();
         }
 
-        private void ExtractAsSeparate(ILeveledBookmark bookmark, PdfDocument doc, FileAndExtractables file,
+        private async Task ExtractAsSeparate(ILeveledBookmark bookmark, PdfDocument doc, FileAndExtractables file,
             IEnumerable<ILeveledBookmark> originalDocumentBookmarks)
         {
             FileInfo destinationFile = new FileInfo(Path.Combine(workingDirectory.FullName,
                     bookmark.Title.ReplaceIllegal() + ".pdf"));
 
-            PdfDocument result = ExtractPages(destinationFile, bookmark.Pages, doc);
+            PdfDocument result = await ExtractPages(destinationFile, bookmark.Pages, doc);
 
             CopyOutlinesForMultipleFile(result, bookmark, originalDocumentBookmarks);
 
@@ -364,7 +364,7 @@ namespace CX.PdfLib.iText7
             return allPages;
         }
 
-        private PdfDocument ExtractPages(FileInfo destinationFile, IList<int> pages, PdfDocument source)
+        private async Task<PdfDocument> ExtractPages(FileInfo destinationFile, IList<int> pages, PdfDocument source)
         {
             ExtSplitter split = new ExtSplitter(source, pageRange => new PdfWriter(destinationFile));
             PdfDocument result = split.ExtractPages(pages);
@@ -374,7 +374,15 @@ namespace CX.PdfLib.iText7
 
             if (options.Annotations != AnnotationOption.Keep)
             {
-                utilities.RemoveAnnotations(result, options.Annotations);
+                AnnotationService annotations = new AnnotationService(logbook.BaseLogbook);
+                if (options.Annotations == AnnotationOption.RemoveUser)
+                {
+                    await annotations.RemoveByTitle(options.AnnotationUsersToRemove, result, options.Cancellation);
+                }
+                else if (options.Annotations == AnnotationOption.RemoveAll)
+                {
+                    await annotations.RemoveAll(result, options.Cancellation);
+                }
             }
 
             utilities.Flatten(result);

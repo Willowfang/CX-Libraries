@@ -29,41 +29,6 @@ namespace CX.PdfLib.iText7
             form.FlattenFields();
         }
 
-        public void RemoveAnnotations(PdfDocument doc, AnnotationOption option)
-        {
-            logbook.Write($"Removing annotations; retrieving count of pages and current user name.", LogLevel.Debug);
-
-            int pageCount = doc.GetNumberOfPages();
-            string user = Environment.UserName;
-
-            if (option == AnnotationOption.RemoveUser)
-            {
-                logbook.Write($"Removal of user annotations requested. Only removing annotations made by current user, while leaving others intact.", LogLevel.Debug);
-            }
-            else if (option == AnnotationOption.RemoveAll)
-            {
-                logbook.Write($"Removal of all annotations requested. Removing all annotations from {doc}.", LogLevel.Debug);
-            }
-
-            logbook.Write($"Looping through pages to find annotations and remove them.", LogLevel.Debug);
-
-            for (int i = 1; i <= pageCount; i++)
-            {
-                PdfPage page = doc.GetPage(i);
-                foreach (PdfAnnotation annot in page.GetAnnotations())
-                {
-                    if (option == AnnotationOption.RemoveAll)
-                        page.RemoveAnnotation(annot);
-                    else if (option == AnnotationOption.RemoveUser && 
-                        annot.GetTitle() != null && 
-                        annot.GetTitle().GetValue() == user)
-                    {
-                        page.RemoveAnnotation(annot);
-                    }
-                }
-            }
-        }
-
         internal IList<ILeveledBookmark> FindLeveledBookmarks(PdfDocument sourceDoc, bool closeDocument = true)
         {
             // Get source document outlines (bookmarks) and a tree of destinations in the document
