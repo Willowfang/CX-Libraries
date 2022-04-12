@@ -74,7 +74,7 @@ namespace CX.PdfLib.iText7
             await Task.Run(() => worker.Remove());
         }
 
-        private class AnnotationTitleWorker : OperatorBase<AnnotationTitleWorker>
+        private class AnnotationTitleWorker : WorkerBase<AnnotationTitleWorker>
         {
             // Provided in constructor arguments
             private readonly string inputPath;
@@ -114,7 +114,7 @@ namespace CX.PdfLib.iText7
             }
         }
 
-        private abstract class InternalExternalBase<TDerived> : OperatorBase<TDerived>
+        private abstract class InternalExternalBase<TDerived> : WorkerBase<TDerived>
         {
             protected readonly CancellationToken token;
 
@@ -190,7 +190,7 @@ namespace CX.PdfLib.iText7
             }
         }
 
-        private class RedactionFlatteningWorker : OperatorBase<RedactionFlatteningWorker>
+        private class RedactionFlatteningWorker : WorkerBase<RedactionFlatteningWorker>
         {
             private readonly CancellationToken token;
             private readonly string inputPath;

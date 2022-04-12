@@ -11,7 +11,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfLib.iText7", "PdfLib.iTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PdfLib.PDFTools", "PdfLib.PDFTools\PdfLib.PDFTools.csproj", "{A53729DE-CA34-44AF-AEA2-19C8F9895FD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoggingLib", "LoggingLib\LoggingLib.csproj", "{15F9F244-26DB-44B2-A35B-4F56F998800D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoggingLib", "LoggingLib\LoggingLib.csproj", "{15F9F244-26DB-44B2-A35B-4F56F998800D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZipLib", "ZipLib\ZipLib.csproj", "{0302F4F5-53FC-45FF-BC33-50BD46A7F93B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZipLib.Framework", "ZipLib.Framework\ZipLib.Framework.csproj", "{668AFE93-609A-408E-9BCD-A53434B437CF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{1F0E2FF1-9C36-4D00-8B89-D8A7378CF439}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerLib", "TaskManagerLib\TaskManagerLib.csproj", "{81681792-6153-416B-857E-30371E50EBB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagerLib.LiteDB", "TaskManagerLib.LiteDB\TaskManagerLib.LiteDB.csproj", "{CE567C79-24DD-4CFA-B463-6AA820046EF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +49,26 @@ Global
 		{15F9F244-26DB-44B2-A35B-4F56F998800D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15F9F244-26DB-44B2-A35B-4F56F998800D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15F9F244-26DB-44B2-A35B-4F56F998800D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0302F4F5-53FC-45FF-BC33-50BD46A7F93B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0302F4F5-53FC-45FF-BC33-50BD46A7F93B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0302F4F5-53FC-45FF-BC33-50BD46A7F93B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0302F4F5-53FC-45FF-BC33-50BD46A7F93B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{668AFE93-609A-408E-9BCD-A53434B437CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{668AFE93-609A-408E-9BCD-A53434B437CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{668AFE93-609A-408E-9BCD-A53434B437CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{668AFE93-609A-408E-9BCD-A53434B437CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F0E2FF1-9C36-4D00-8B89-D8A7378CF439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F0E2FF1-9C36-4D00-8B89-D8A7378CF439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F0E2FF1-9C36-4D00-8B89-D8A7378CF439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F0E2FF1-9C36-4D00-8B89-D8A7378CF439}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81681792-6153-416B-857E-30371E50EBB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81681792-6153-416B-857E-30371E50EBB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81681792-6153-416B-857E-30371E50EBB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81681792-6153-416B-857E-30371E50EBB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE567C79-24DD-4CFA-B463-6AA820046EF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE567C79-24DD-4CFA-B463-6AA820046EF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE567C79-24DD-4CFA-B463-6AA820046EF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE567C79-24DD-4CFA-B463-6AA820046EF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

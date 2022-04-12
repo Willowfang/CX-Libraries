@@ -40,7 +40,7 @@ namespace CX.PdfLib.iText7
             return await Task.Run(() => worker.Convert());
         }
 
-        private class WordConvertWorker : OperatorBase<WordConvertWorker>
+        private class WordConvertWorker : WorkerBase<WordConvertWorker>
         {
             private readonly IList<string> filePaths;
             private readonly List<string> converted;

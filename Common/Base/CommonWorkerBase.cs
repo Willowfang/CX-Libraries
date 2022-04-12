@@ -1,6 +1,4 @@
 ﻿using CX.LoggingLib;
-using CX.PdfLib.Common;
-using iText.Kernel.Pdf;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,26 +7,24 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.iText7
+namespace CX.Common.Base
 {
-    public abstract class OperatorBase<TDerived> : LoggingEnabled<TDerived>
+    public abstract class CommonWorkerBase<TDerived> : LoggingEnabled<TDerived>
     {
         protected List<FileSystemInfo> CreatedPaths = new();
-        protected List<PdfDocument> OpenedDocuments = new();
 
-        public OperatorBase(ILogbook logbook) : base(logbook) { }
+        public CommonWorkerBase(ILogbook logbook) : base(logbook) { }
 
-        protected void PrepareCleanUp()
+        protected virtual void PrepareCleanUp()
         {
             CreatedPaths = new();
-            OpenedDocuments = new();
         }
 
-        protected bool CheckIfFileDoesNotExistAndCleanUp(FileInfo file)
+        protected virtual bool CheckIfFileDoesNotExistAndCleanUp(FileInfo file)
         {
             return CheckIfFileDoesNotExistAndCleanUp(file.FullName);
         }
-        protected bool CheckIfFileDoesNotExistAndCleanUp(string filePath)
+        protected virtual bool CheckIfFileDoesNotExistAndCleanUp(string filePath)
         {
             if (filePath == null || File.Exists(filePath) == false)
             {
@@ -46,7 +42,7 @@ namespace CX.PdfLib.iText7
         /// </summary>
         /// <param name="cancellation"></param>
         /// <returns></returns>
-        protected bool CheckIfCancelledAndCleanUp(CancellationToken cancellation)
+        protected virtual bool CheckIfCancelledAndCleanUp(CancellationToken cancellation)
         {
             if (cancellation.IsCancellationRequested)
             {
@@ -60,14 +56,6 @@ namespace CX.PdfLib.iText7
 
         protected virtual void CleanUp()
         {
-            foreach (PdfDocument doc in OpenedDocuments)
-            {
-                if (doc.IsClosed() == false)
-                {
-                    doc.Close();
-                }
-            }
-
             foreach (FileSystemInfo path in CreatedPaths)
             {
                 if (path.Exists)
