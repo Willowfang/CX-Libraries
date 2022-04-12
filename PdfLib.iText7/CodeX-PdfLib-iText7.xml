@@ -26,14 +26,6 @@
             <returns>A list of created files and folders (of which all might not exist)</returns>
             <exception cref="T:System.ArgumentException"></exception>
         </member>
-        <member name="M:CX.PdfLib.iText7.OperatorBase`1.CheckIfCancelledAndCleanUp(System.Threading.CancellationToken)">
-            <summary>
-            Returns true if canceled, otherwise false. Performs
-            <see cref="M:CX.PdfLib.iText7.OperatorBase`1.CleanUp"/> if operation has been canceled.
-            </summary>
-            <param name="cancellation"></param>
-            <returns></returns>
-        </member>
         <member name="T:CX.PdfLib.iText7.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.

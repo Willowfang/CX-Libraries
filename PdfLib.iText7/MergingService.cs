@@ -44,7 +44,7 @@ namespace CX.PdfLib.iText7
             return await worker.Merge();
         }
 
-        private class MergingWorker : OperatorBase<MergingWorker>
+        private class MergingWorker : WorkerBase<MergingWorker>
         {
             // Passed in constructor
             private readonly IList<string> sourcePaths;
@@ -158,7 +158,7 @@ namespace CX.PdfLib.iText7
             }
         }
         
-        private class MergingOptionsWorker : OperatorBase<MergingOptionsWorker>
+        private class MergingOptionsWorker : WorkerBase<MergingOptionsWorker>
         {
             // Provided by constructor arguments
             private readonly IWordConvertService wordConvertService;

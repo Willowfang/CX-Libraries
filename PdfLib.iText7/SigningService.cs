@@ -26,7 +26,7 @@ namespace CX.PdfLib.iText7
             await Task.Run(() => worker.Remove());
         }
 
-        private class SignatureWorker : OperatorBase<SignatureWorker>
+        private class SignatureWorker : WorkerBase<SignatureWorker>
         {
             // Provided by constructor
             private readonly FileInfo source;

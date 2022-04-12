@@ -47,7 +47,7 @@ namespace CX.PdfLib.iText7
         }
     }
 
-    internal class ExtractionWorker : OperatorBase<ExtractionWorker>
+    internal class ExtractionWorker : WorkerBase<ExtractionWorker>
     {
         private ExtractionOptions options;
         private PdfMerger merger;
@@ -218,8 +218,6 @@ namespace CX.PdfLib.iText7
                 workingDirectory.Delete(true);
             }
 
-            if (options.Progress != null)
-                options.Progress.Report(new ProgressReport(100, ProgressPhase.Finished));
             return CreatedPaths;
         }
 
