@@ -11,16 +11,34 @@ using Task = System.Threading.Tasks.Task;
 namespace CX.PdfLib.iText7
 {   
     /// <summary>
-    /// Implementation of <see cref="IWordConvertService"/> service
+    /// Default implementation of <see cref="IWordConvertService"/>.
     /// </summary>
     public class WordConvertService : LoggingEnabled<WordConvertService>, IWordConvertService
     {
+        /// <summary>
+        /// Create a new implementation instance.
+        /// </summary>
+        /// <param name="logbook">Logging service.</param>
         public WordConvertService(ILogbook logbook) : base(logbook) { }
 
+        /// <summary>
+        /// Convert a Word-document to pdf.
+        /// </summary>
+        /// <param name="filePath">File to convert.</param>
+        /// <param name="outputDirectory">Directory to save the converted document in.</param>
+        /// <returns>Path of converted file.</returns>
         public async Task<string> Convert(string filePath, string outputDirectory)
         {
             return await Convert(filePath, outputDirectory, CancellationToken.None);
         }
+
+        /// <summary>
+        /// Convert a Word-document to pdf.
+        /// </summary>
+        /// <param name="filePath">Document to convert.</param>
+        /// <param name="outputDirectory">Directory to save the converted document in.</param>
+        /// <param name="token">Cancellation token for the current task.</param>
+        /// <returns>Path of the converted file.</returns>
         public async Task<string> Convert(string filePath, string outputDirectory, CancellationToken token)
         {
             IList<string> result = await Convert(new List<string>() { filePath }, outputDirectory, token);
@@ -29,10 +47,24 @@ namespace CX.PdfLib.iText7
             else return null;
         }
 
+        /// <summary>
+        /// Convert Word-documents to pdf.
+        /// </summary>
+        /// <param name="filePaths">Documents to convert.</param>
+        /// <param name="outputDirectory">Directory to save the documents in.</param>
+        /// <returns>Paths of the converted documents.</returns>
         public async Task<IList<string>> Convert(IList<string> filePaths, string outputDirectory)
         {
             return await Convert(filePaths, outputDirectory, CancellationToken.None);
         }
+
+        /// <summary>
+        /// Convert Word-documents to pdf.
+        /// </summary>
+        /// <param name="filePaths">Files to convert.</param>
+        /// <param name="outputDirectory">Directory to save documents in.</param>
+        /// <param name="token">Cancellation token for the current task.</param>
+        /// <returns>Paths of the converted files.</returns>
         public async Task<IList<string>> Convert(IList<string> filePaths, string outputDirectory,
             CancellationToken token)
         {

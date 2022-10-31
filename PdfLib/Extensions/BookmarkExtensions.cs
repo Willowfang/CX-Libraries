@@ -9,7 +9,7 @@ namespace CX.PdfLib.Extensions
         /// <summary>
         /// Adjust the level of all bookmarks in an <see cref="IList{ILeveledBookmark}"/>.
         /// </summary>
-        /// <param name="originals"></param>
+        /// <param name="originals">The bookmarks to adjust.</param>
         /// <param name="adjustment">Amount to adjust (positive or negative)</param>
         /// <remarks>Bookmark level cannot be lower than 1. Bookmarks will be adjusted
         /// to level 1, if adjustment would bring it lower. This can be used to level all
@@ -29,6 +29,12 @@ namespace CX.PdfLib.Extensions
             return adjusted;
         }
 
+        /// <summary>
+        /// Checks if the current bookmark is a child of another bookmark.
+        /// </summary>
+        /// <param name="current">The bookmark to compare.</param>
+        /// <param name="bookmarks">The list to search the parent from.</param>
+        /// <returns>True, if the bookmark is a child of a bookmark in the given list.</returns>
         public static bool IsChild(this ILeveledBookmark current, IEnumerable<ILeveledBookmark> bookmarks)
         {
             foreach (ILeveledBookmark bookmark in bookmarks)

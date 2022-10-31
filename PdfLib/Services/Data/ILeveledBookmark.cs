@@ -1,7 +1,7 @@
 ﻿namespace CX.PdfLib.Services.Data
 {
     /// <summary>
-    /// A bookmark in a tree hierarchy
+    /// A bookmark with information about its level in the bookmark tree.
     /// </summary>
     public interface ILeveledBookmark : IBookmark, ILeveledItem { }
 }

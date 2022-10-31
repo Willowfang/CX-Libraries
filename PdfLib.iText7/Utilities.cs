@@ -15,12 +15,20 @@ using System.Threading.Tasks;
 namespace CX.PdfLib.iText7
 {
     /// <summary>
-    /// Various utility methods related to pdfs. Handles debug logging.
+    /// Various utility methods for pdf handling.
     /// </summary>
     internal class Utilities : LoggingEnabled<Utilities>
     {
+        /// <summary>
+        /// Create a new utility instance.
+        /// </summary>
+        /// <param name="logbook">Logging service.</param>
         internal Utilities(ILogbook logbook) : base(logbook) { }
 
+        /// <summary>
+        /// Flatten a pdf document.
+        /// </summary>
+        /// <param name="doc">Document to flatten.</param>
         public void Flatten(PdfDocument doc)
         {
             logbook.Write($"Flattening form fields (including signatures).", LogLevel.Debug);
@@ -29,6 +37,12 @@ namespace CX.PdfLib.iText7
             form.FlattenFields();
         }
 
+        /// <summary>
+        /// Find bookmarks and their level info in a document.
+        /// </summary>
+        /// <param name="sourceDoc">Document to search.</param>
+        /// <param name="closeDocument">If true, close <see cref="PdfDocument"/> instance when done.</param>
+        /// <returns></returns>
         internal IList<ILeveledBookmark> FindLeveledBookmarks(PdfDocument sourceDoc, bool closeDocument = true)
         {
             // Get source document outlines (bookmarks) and a tree of destinations in the document
@@ -53,6 +67,11 @@ namespace CX.PdfLib.iText7
             return withPages;
         }
 
+        /// <summary>
+        /// Add bookmarks with level info into a document.
+        /// </summary>
+        /// <param name="bookmarks">Bookmarks to add.</param>
+        /// <param name="product"><see cref="PdfDocument"/> to insert into.</param>
         internal void AddLeveledBookmarks(IList<ILeveledBookmark> bookmarks, PdfDocument product)
         {
             logbook.Write("Initializing outlines.", LogLevel.Debug);
@@ -107,6 +126,12 @@ namespace CX.PdfLib.iText7
             }
         }
 
+        /// <summary>
+        /// Adjust the bookmarks in a list for extraction.
+        /// </summary>
+        /// <param name="sourceBookmarks">Bookmarks to adjust.</param>
+        /// <param name="extractedPages">Pages that have been extracted.</param>
+        /// <returns>An adjusted list.</returns>
         internal IList<ILeveledBookmark> AdjustBookmarksExtract(IList<ILeveledBookmark> sourceBookmarks,
             IList<int> extractedPages)
         {
@@ -133,6 +158,12 @@ namespace CX.PdfLib.iText7
             return correctedBookmarks;
         }
 
+        /// <summary>
+        /// Adjust bookmarks in a list for merge.
+        /// </summary>
+        /// <param name="originalBookmarks">Bookmarks to adjust.</param>
+        /// <param name="startPageInNewDocument">The start page of the file in the new document.</param>
+        /// <returns>Adjusted bookmarks.</returns>
         public IList<ILeveledBookmark> AdjustBookmarksMerge(IList<ILeveledBookmark> originalBookmarks,
            int startPageInNewDocument)
         {
@@ -151,7 +182,14 @@ namespace CX.PdfLib.iText7
             return adjustedBookmarks;
         }
 
-        internal IList<ILeveledBookmark> GetParentAndChildrenForExtraction(IEnumerable<ILeveledBookmark> allBookmarks,
+        /// <summary>
+        /// Get a parent bookmark with all its children.
+        /// </summary>
+        /// <param name="allBookmarks">Bookmarks to look children from.</param>
+        /// <param name="parent">The parent.</param>
+        /// <returns>Parent and children.</returns>
+        internal IList<ILeveledBookmark> GetParentAndChildrenForExtraction(
+            IEnumerable<ILeveledBookmark> allBookmarks,
             ILeveledBookmark parent)
         {
             logbook.Write($"Retrieving parent and children {nameof(ILeveledBookmark)} for extraction.", LogLevel.Debug);
@@ -172,6 +210,14 @@ namespace CX.PdfLib.iText7
             return children;
         }
 
+        /// <summary>
+        /// Return bookmarks from a document.
+        /// </summary>
+        /// <param name="outline">Outline containing the bookmarks.</param>
+        /// <param name="sourceNames">Source names of the bookmarks.</param>
+        /// <param name="sourceDocument">Document to look in.</param>
+        /// <param name="level">Start at this level.</param>
+        /// <returns>Bookmarks.</returns>
         private IList<ILeveledBookmark> GetBookmarks(PdfOutline outline,
             IDictionary<string, PdfObject> sourceNames, PdfDocument sourceDocument, int level = 0)
         {
@@ -196,6 +242,12 @@ namespace CX.PdfLib.iText7
             return bookmarks;
         }
 
+        /// <summary>
+        /// Get all pages of bookmarks.
+        /// </summary>
+        /// <param name="bookmarks">Bookmarks to get pages for.</param>
+        /// <param name="documentEndPage">Final page number of the document.</param>
+        /// <returns>Bookmarks with pages.</returns>
         internal IList<ILeveledBookmark> GetAllPages(IList<ILeveledBookmark> bookmarks, int documentEndPage)
         {
             logbook.Write($"Retrieving all page ranges for all {nameof(ILeveledBookmark)}s.", LogLevel.Debug);

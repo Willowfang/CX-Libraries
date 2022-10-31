@@ -9,15 +9,15 @@ using System.Threading.Tasks;
 namespace CX.PdfLib.Services
 {
     /// <summary>
-    /// Extract pages from a pdf
+    /// Service for extracting part of documents.
     /// </summary>
     public interface IExtractionService
     {
         /// <summary>
-        /// Extract bookmarks from documents into one or more new documents
+        /// Extract bookmarks from documents into one or more new documents.
         /// </summary>
-        /// <param name="options">Options for extraction</param>
-        /// <returns>A list of extracted files</returns>
+        /// <param name="options">Options for extraction.</param>
+        /// <returns>A list of product files.</returns>
         public Task<IList<FileSystemInfo>> Extract(ExtractionOptions options);
     }
 }

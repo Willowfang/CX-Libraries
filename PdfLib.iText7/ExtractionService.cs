@@ -14,10 +14,18 @@ using CX.LoggingLib;
 
 namespace CX.PdfLib.iText7
 {
+    /// <summary>
+    /// Default implementation of <see cref="IExtractionService"/>.
+    /// </summary>
     public class ExtractionService : LoggingEnabled<ExtractionService>, IExtractionService
     {
         private IPdfAConvertService pdfAConverter;
 
+        /// <summary>
+        /// Create a new instance of extraction services.
+        /// </summary>
+        /// <param name="pdfAConverter">Service for converting documents to pdf/a.</param>
+        /// <param name="logbook">Logging service.</param>
         public ExtractionService(IPdfAConvertService pdfAConverter, ILogbook logbook) : base(logbook)
         {
             this.pdfAConverter = pdfAConverter;
@@ -26,9 +34,9 @@ namespace CX.PdfLib.iText7
         /// <summary>
         /// Extract a pdf file according to <see cref="ExtractionOptions"/>.
         /// </summary>
-        /// <param name="options"></param>
+        /// <param name="options">Options to use.</param>
         /// <returns>A list of created files and folders (of which all might not exist)</returns>
-        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentException">Throw, if an error happpens with worker.</exception>
         public async Task<IList<FileSystemInfo>> Extract(ExtractionOptions options)
         {
             ExtractionWorker worker;
@@ -47,6 +55,9 @@ namespace CX.PdfLib.iText7
         }
     }
 
+    /// <summary>
+    /// A worker class to handle extraction.
+    /// </summary>
     internal class ExtractionWorker : WorkerBase<ExtractionWorker>
     {
         private ExtractionOptions options;
@@ -62,6 +73,12 @@ namespace CX.PdfLib.iText7
 
         private bool groupByFiles;
 
+        /// <summary>
+        /// Create a new instance of extraction worker.
+        /// </summary>
+        /// <param name="options">Options to use for extraction.</param>
+        /// <param name="pdfAConverter">Pdf/a conversion service.</param>
+        /// <param name="logbook">Logging service.</param>
         internal ExtractionWorker(ExtractionOptions options, IPdfAConvertService pdfAConverter,
             ILogbook logbook) : base(logbook)
         {
@@ -77,6 +94,10 @@ namespace CX.PdfLib.iText7
             groupByFiles = options.Files.Any(e => e.Extractables.Count() > 1);
         }
 
+        /// <summary>
+        /// Create a destination path for the product.
+        /// </summary>
+        /// <exception cref="ArgumentException"></exception>
         private void CreateDestination()
         {
             if (options.PdfA)
@@ -127,6 +148,11 @@ namespace CX.PdfLib.iText7
                 destinationDirectory = (DirectoryInfo)options.Destination;
             }
         }
+
+        /// <summary>
+        /// Get the total count of all bookmarks to extract.
+        /// </summary>
+        /// <exception cref="ArgumentException"></exception>
         private void GetTotalCount()
         {
             foreach (FileAndExtractables file in options.Files)
@@ -145,6 +171,10 @@ namespace CX.PdfLib.iText7
             }
         }
 
+        /// <summary>
+        /// Execution method for extracting bookmarks from a file.
+        /// </summary>
+        /// <returns>List of the files that were created.</returns>
         public async Task<IList<FileSystemInfo>> Extract()
         {
             PrepareCleanUp();

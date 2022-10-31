@@ -12,30 +12,37 @@ using System.Threading.Tasks;
 
 namespace CX.PdfLib.iText7
 {
+    /// <summary>
+    /// Default implementation for <see cref="BookmarkService"/>.
+    /// </summary>
     public class BookmarkService : LoggingEnabled<BookmarkService>, IBookmarkService
     {
         private Utilities utilities;
 
+        /// <summary>
+        /// Create a new instance of bookmark service.
+        /// </summary>
+        /// <param name="logbook">Logging service.</param>
         public BookmarkService(ILogbook logbook) : base(logbook)
         {
             utilities = new Utilities(logbook);
         }
 
         /// <summary>
-        /// Get all bookmarks from a document
+        /// Get all bookmarks from a document.
         /// </summary>
-        /// <param name="sourcePdf">Source document path</param>
-        /// <returns></returns>
+        /// <param name="sourcePdf">Source document path.</param>
+        /// <returns>A list of all found bookmarks.</returns>
         public async Task<IList<ILeveledBookmark>> FindBookmarks(string sourcePdf)
         {
             return await Task.Run(() => utilities.FindLeveledBookmarks(new PdfDocument(new PdfReader(sourcePdf))));
         }
 
         /// <summary>
-        /// Add bookmarks to a document
+        /// Add bookmarks to a document.
         /// </summary>
-        /// <param name="bookmarks">Bookmarks to add</param>
-        /// <param name="documentPath">Destination document path</param>
+        /// <param name="bookmarks">Bookmarks to add.</param>
+        /// <param name="documentPath">Destination document path.</param>
         public void AddBookmarks(IList<ILeveledBookmark> bookmarks, string documentPath)
         {
             PdfDocument product = new PdfDocument(new PdfWriter(documentPath));

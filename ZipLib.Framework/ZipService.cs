@@ -9,10 +9,23 @@ using System.Threading.Tasks;
 
 namespace CX.ZipLib.Framework
 {
+    /// <summary>
+    /// Implementation for <see cref="IZipService"/>.
+    /// </summary>
     public class ZipService : LoggingEnabled, IZipService
     {
+        /// <summary>
+        /// Create a new implementation instance.
+        /// </summary>
+        /// <param name="logbook">Logging service.</param>
         public ZipService(ILogbook logbook) : base(logbook) { }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="sourceDirectory"></param>
+        /// <param name="destinationFile"></param>
+        /// <returns></returns>
         public async Task Compress(DirectoryInfo sourceDirectory, FileInfo destinationFile)
         {
             ZipCompressWorker worker = new ZipCompressWorker(sourceDirectory, destinationFile, logbook);

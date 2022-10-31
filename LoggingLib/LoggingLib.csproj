@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>CodeX-LoggingLib</AssemblyName>
     <RootNamespace>CX.LoggingLib</RootNamespace>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
 </Project>

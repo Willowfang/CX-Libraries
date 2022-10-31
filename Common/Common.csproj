@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>CX.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
     <AssemblyName>CodeX-$(MSBuildProjectName)</AssemblyName>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

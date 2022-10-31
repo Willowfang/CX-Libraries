@@ -10,16 +10,34 @@ using CX.LoggingLib;
 namespace CX.PdfLib.iText7
 {
     /// <summary>
-    /// Default implementation for ISigner service
+    /// Default implementation for <see cref="ISigningService"/>.
     /// </summary>
     public class SigningService : LoggingEnabled, ISigningService
     {
+        /// <summary>
+        /// Create a new implementation instance.
+        /// </summary>
+        /// <param name="logbook">Logging service.</param>
         public SigningService(ILogbook logbook) : base(logbook) { }
+
+        /// <summary>
+        /// Remove digital signatures from a document.
+        /// </summary>
+        /// <param name="source">Document to remove signatures from.</param>
+        /// <param name="destination">Path to save the resulting file at.</param>
+        /// <returns>An awaitable task.</returns>
         public async Task RemoveSignature(FileInfo source, FileInfo destination)
         {
             await RemoveSignature(source, destination, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Remove digital signatures from a document.
+        /// </summary>
+        /// <param name="source">Document to remove signatures from.</param>
+        /// <param name="destination">Path to save the resulting file at.</param>
+        /// <param name="token">Cancellation token for the current task.</param>
+        /// <returns>An awaitable task.</returns>
         public async Task RemoveSignature(FileInfo source, FileInfo destination, CancellationToken token)
         {
             SignatureWorker worker = new SignatureWorker(source, destination, token, logbook);

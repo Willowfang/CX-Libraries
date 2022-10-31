@@ -8,8 +8,16 @@ namespace CX.TaskManagerLib
 {
     public interface ITaskManager
     {
-        public Task<bool> AddOrUpdate(TaskItem item);
-        public Task<bool> Remove(TaskItem item);
-        public Task<IList<TaskItem>> GetAll();
+        public event EventHandler<TaskPollingEventArgs> PollingEvent;
+
+        public Task Poll();
+        public void StopPolling();
+
+        public Task<bool> AddOrModifySource(TaskPollingSource source);
+        public Task<bool> RemoveSource(TaskPollingSource source);
+
+        public Task<bool> AddOrModifyTaskItem(TaskItem item);
+        public Task<bool> RemoveTaskItem(TaskItem item);
+        public Task<IList<TaskItem>> GetAllTaskItems();
     }
 }

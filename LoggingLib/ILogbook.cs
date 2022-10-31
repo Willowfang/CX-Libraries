@@ -3,29 +3,43 @@
 namespace CX.LoggingLib
 {
     /// <summary>
-    /// Logging level for messages
+    /// Logging level for messages.
     /// </summary>
     public enum LogLevel
     {
+        /// <summary>
+        /// Logs all messages. Should only be on when debugging.
+        /// </summary>
         Debug,
+        /// <summary>
+        /// Logs everything except Debug messages. Normal level.
+        /// </summary>
         Information,
+        /// <summary>
+        /// Only logs Warning, Error and Fatal messages.
+        /// </summary>
         Warning,
+        /// <summary>
+        /// Only logs Error and Fatal messages.
+        /// </summary>
         Error,
+        /// <summary>
+        /// Only logs Fatal messages.
+        /// </summary>
         Fatal
     }
 
     /// <summary>
-    /// Interface for logging. Implement <see cref="ILogbook.Write(string, LogLevel, Exception?, object?, string?, string)"/> with
-    /// your chosen logging framework to log messages. For default abstract base class, see <see cref="Logbook"/>.
+    /// Service for logging messages to a message log.
     /// </summary>
     public interface ILogbook
     {
         /// <summary>
-        /// Create a typed version of this <see cref="ILogbook"/>. A typed version provides assigned type as extra information when
-        /// writing messages.
+        /// Create a typed version of this <see cref="ILogbook"/>. A typed version provides assigned type as 
+        /// extra information when writing messages.
         /// </summary>
-        /// <typeparam name="T">Type of the containing class</typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">Type of the class to use this logger.</typeparam>
+        /// <returns>A typed logger.</returns>
         public TypedLogbook<T> CreateTyped<T>();
 
         /// <summary>
@@ -47,15 +61,25 @@ namespace CX.LoggingLib
     public abstract class Logbook : ILogbook
     {
         /// <summary>
-        /// Create a typed <see cref="ILogbook"/> with given type as container. <see cref="TypedLogbook{T}"/> provides
-        /// the name of <typeparamref name="T"/> as extra information when logging.
+        /// Create a typed <see cref="ILogbook"/> with given type as container. <see cref="TypedLogbook{T}"/> 
+        /// provides the name of <typeparamref name="T"/> as extra information when logging.
         /// </summary>
-        /// <typeparam name="T">Type of the containing class.</typeparam>
+        /// <typeparam name="T">Type of the class to use this logger.</typeparam>
         /// <returns></returns>
         public virtual TypedLogbook<T> CreateTyped<T>()
         {
             return new TypedLogbook<T>(this);
         }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="level"></param>
+        /// <param name="exception"></param>
+        /// <param name="callerName"></param>
+        /// <param name="callerMemberName"></param>
+        /// <param name="customContent"></param>
         public abstract void Write(string message, LogLevel level, Exception? exception = null,
             string? callerName = "", [CallerMemberName] string callerMemberName = "", params object[]? customContent);
     }
@@ -78,8 +102,7 @@ namespace CX.LoggingLib
         }
 
         /// <summary>
-        /// Call <see cref="ILogbook.Write(string, LogLevel, Exception?, string?, string, object[]?)"/> with given
-        /// arguments and the name of <typeparamref name="T"/> as callerName./>
+        /// <inheritdoc/>
         /// </summary>
         /// <param name="message">Message to write into log.</param>
         /// <param name="level">Logging level for the message.</param>
@@ -93,7 +116,7 @@ namespace CX.LoggingLib
         }
 
         /// <summary>
-        /// Get the underlyin <see cref="ILogbook"/> instance
+        /// Get the underlying <see cref="ILogbook"/> instance.
         /// </summary>
         public ILogbook BaseLogbook
         {

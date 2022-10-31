@@ -8,24 +8,33 @@ using System.Threading.Tasks;
 
 namespace PdfLib.PDFTools
 {
+    /// <summary>
+    /// A class for performing pdf/a conversions. Implements <see cref="IPdfAConvertService"/>.
+    /// </summary>
     public class PdfAConverter : IPdfAConvertService
     {
         private const string pdfToolsLocation = @"C:\Program Files\Tracker Software\PDF Tools\PDFXTools.exe";
         private TypedLogbook<PdfAConverter> logbook;
 
+        /// <summary>
+        /// Create a new instance of pdf/a converter.
+        /// </summary>
+        /// <param name="logbook">Logging service.</param>
         public PdfAConverter(ILogbook logbook)
         {
             this.logbook = logbook.CreateTyped<PdfAConverter>();
         }
 
         /// <summary>
-        /// Convert pdfs to pdf/as using PDF-Tools
+        /// Convert pdfs to pdf/as using PDF-Tools.
         /// </summary>
-        /// <remarks>Requires Tracker Software PDF-Tools to be installed at default location</remarks>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
+        /// <remarks>Requires Tracker Software PDF-Tools to be installed at default location.</remarks>
+        /// <param name="source">Source to convert from.</param>
+        /// <param name="destinationDirectory">Directory to save products in.</param>
+        /// <param name="cancellation">Cancellation token for current task.</param>
         /// <returns>True, if successful</returns>
-        /// <exception cref="FileNotFoundException">Thrown, if PDF-Tools executable or source directory is not found</exception>
+        /// <exception cref="FileNotFoundException">Thrown, if PDF-Tools executable or source directory is 
+        /// not found.</exception>
         public async Task<bool> Convert(FileSystemInfo source, DirectoryInfo destinationDirectory,
             CancellationToken cancellation = default(CancellationToken))
         {
@@ -49,7 +58,18 @@ namespace PdfLib.PDFTools
             if (!destinationDirectory.Exists)
                 destinationDirectory.Create();
 
-            string commandText = $"/RunTool:showprog=no;showrep=no convertToPDFA \"{source.FullName}\" /Output:folder=\\\"{destinationDirectory.FullName.TrimEnd('\\')}\\\";filename=\\\"%[FileName]\\\";overwrite=yes;showfiles=no";
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetTempFileName()).TrimEnd('\\');
+            Directory.CreateDirectory(tempDir);
+
+            string commandText = $"/RunTool:showprog=no;showrep=no convertToPDFA \"{source.FullName}\" /Output:folder=\\\"{tempDir}\\\";filename=\\\"%[FileName]\\\";overwrite=yes;showfiles=no";
+
+            foreach (string file in Directory.GetFiles(tempDir))
+            {
+                FileInfo tempFile = new FileInfo(file);
+                tempFile.CopyTo(Path.Combine(destinationDirectory.FullName, tempFile.Name));
+            }
+
+            Directory.Delete(tempDir, true);
 
             logbook.Write($"Command: {commandText}", LogLevel.Debug);
 

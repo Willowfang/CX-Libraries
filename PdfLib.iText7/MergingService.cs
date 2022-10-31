@@ -16,27 +16,53 @@ using System.Threading.Tasks;
 
 namespace CX.PdfLib.iText7
 {
+    /// <summary>
+    /// Default implementation for <see cref="IMergingService"/>.
+    /// </summary>
     public class MergingService : LoggingEnabled, IMergingService
     {
         private IWordConvertService wordConvertService;
 
+        /// <summary>
+        /// Create a new implementation instance for merging files.
+        /// </summary>
+        /// <param name="wordConvertService">Service for converting Word-documents to pdf.</param>
+        /// <param name="logbook">Logging service.</param>
         public MergingService(IWordConvertService wordConvertService,
             ILogbook logbook) : base(logbook) 
         {
             this.wordConvertService = wordConvertService;
         }
 
+        /// <summary>
+        /// Merge given files.
+        /// </summary>
+        /// <param name="sourcePaths">Files to merge.</param>
+        /// <param name="outputPath">Product output path.</param>
+        /// <returns>List of start pages for the merged files in the new document.</returns>
         public async Task<IList<int>> Merge(IList<string> sourcePaths, string outputPath)
         {
             return await Merge(sourcePaths, outputPath, CancellationToken.None);
         }
 
+        /// <summary>
+        /// Merge given files.
+        /// </summary>
+        /// <param name="sourcePaths">Files to merge.</param>
+        /// <param name="outputPath">Product output path.</param>
+        /// <param name="token">Cancellation token for the current task.</param>
+        /// <returns>List of start pages for the merged files in the new document.</returns>
         public async Task<IList<int>> Merge(IList<string> sourcePaths, string outputPath, CancellationToken token)
         {
             MergingWorker worker = new MergingWorker(sourcePaths, outputPath, token, logbook);
             return await Task.Run(() => worker.Merge());
         }
 
+        /// <summary>
+        /// Merge given files using provided options.
+        /// </summary>
+        /// <param name="options">Options to use.</param>
+        /// <returns>Files produced.</returns>
         public async Task<IList<FileSystemInfo>> MergeWithOptions(MergingOptions options)
         {
             MergingOptionsWorker worker = new MergingOptionsWorker(options, wordConvertService,

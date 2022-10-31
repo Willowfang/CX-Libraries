@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace CX.PdfLib.Services.Data
 {
     /// <summary>
-    /// An object that has a property indicating its level in a hierarchy
+    /// An object that has a property indicating its level in a hierarchy.
     /// </summary>
     public interface ILeveledItem
     {
         /// <summary>
-        /// Level of the item in the hierarchy
+        /// Level of the item in the hierarchy.
         /// </summary>
         public int Level { get; set; }
     }

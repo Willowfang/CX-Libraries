@@ -7,22 +7,40 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using IOPath = System.IO.Path;
 
 namespace CX.PdfLib.iText7
 {
+    /// <summary>
+    /// Default implementation for <see cref="IAnnotationService"/>.
+    /// </summary>
     public class AnnotationService : LoggingEnabled, IAnnotationService
     {
+        /// <summary>
+        /// Create a new annotation service implementation with logging.
+        /// </summary>
+        /// <param name="logbook">Logging service to use.</param>
         public AnnotationService(ILogbook logbook) : base(logbook) 
         { }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<string>> GetTitles(string inputPath)
         {
             return await GetTitles(inputPath, CancellationToken.None);
         }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<string>> GetTitles(string inputPath,
             CancellationToken token)
         {
@@ -31,19 +49,45 @@ namespace CX.PdfLib.iText7
             return await Task.Run(() => worker.GetTitles());
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <returns></returns>
         public async Task RemoveAll(string inputPath)
         {
             await RemoveByTitle(null, inputPath);
         }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task RemoveAll(string inputPath, CancellationToken token)
         {
             await RemoveByTitle(null, inputPath, token);
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="titles"></param>
+        /// <param name="inputPath"></param>
+        /// <returns></returns>
         public async Task RemoveByTitle(IEnumerable<string> titles, string inputPath)
         {
             await RemoveByTitle(titles, inputPath, CancellationToken.None);
         }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="titles"></param>
+        /// <param name="inputPath"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task RemoveByTitle(IEnumerable<string> titles, string inputPath,
             CancellationToken token)
         {
@@ -52,20 +96,46 @@ namespace CX.PdfLib.iText7
             await Task.Run(() => worker.Remove());
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <returns></returns>
         public async Task FlattenRedactions(string inputPath)
         {
             await FlattenRedactions(inputPath, CancellationToken.None);
         }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task FlattenRedactions(string inputPath, CancellationToken token)
         {
             RedactionFlatteningWorker worker = new RedactionFlatteningWorker(inputPath, token, logbook);
             await Task.Run(() => worker.Flatten());
         }
 
+        /// <summary>
+        /// Internal execution method for the removal of all annotations.
+        /// </summary>
+        /// <param name="doc">Pdf document to remove annotations from.</param>
+        /// <param name="token">Cancellation token for the current task.</param>
+        /// <returns>An awaitable task.</returns>
         internal async Task RemoveAll(PdfDocument doc, CancellationToken token)
         {
             await RemoveByTitle(null, doc, token);
         }
+
+        /// <summary>
+        /// Internal execution method for the removal of specific annotations.
+        /// </summary>
+        /// <param name="titles">Titles of the annotations to remove.</param>
+        /// <param name="doc">Pdf document to remove annotations from.</param>
+        /// <param name="token">Cancellation token of the current task.</param>
+        /// <returns>An awaitable task.</returns>
         internal async Task RemoveByTitle(IEnumerable<string> titles, PdfDocument doc,
             CancellationToken token)
         {
@@ -74,13 +144,21 @@ namespace CX.PdfLib.iText7
             await Task.Run(() => worker.Remove());
         }
 
+        /// <summary>
+        /// Worker class for performing task with annotation titles.
+        /// </summary>
         private class AnnotationTitleWorker : WorkerBase<AnnotationTitleWorker>
         {
             // Provided in constructor arguments
             private readonly string inputPath;
             private CancellationToken token;
 
-
+            /// <summary>
+            /// Create a new worker for working with annotation titles.
+            /// </summary>
+            /// <param name="inputPath">Path of the file to work with.</param>
+            /// <param name="token">Cancellation token of the current task.</param>
+            /// <param name="logbook">Logging service.</param>
             internal AnnotationTitleWorker(string inputPath, CancellationToken token, 
                 ILogbook logbook)
                 : base(logbook)
@@ -89,6 +167,10 @@ namespace CX.PdfLib.iText7
                 this.token = token;
             }
 
+            /// <summary>
+            /// Get the titles of annotations.
+            /// </summary>
+            /// <returns>Annotation titles.</returns>
             internal IEnumerable<string> GetTitles()
             {
                 HashSet<string> results = new HashSet<string>();
@@ -114,11 +196,22 @@ namespace CX.PdfLib.iText7
             }
         }
 
+        /// <summary>
+        /// A helper class for determining, whether the pdf document instance used is produced here or elsewhere.
+        /// </summary>
+        /// <typeparam name="TDerived">Type of the class to implement this.</typeparam>
         private abstract class InternalExternalBase<TDerived> : WorkerBase<TDerived>
         {
             protected readonly CancellationToken token;
 
+            /// <summary>
+            /// The pdf document to evaluate.
+            /// </summary>
             protected PdfDocument doc;
+
+            /// <summary>
+            /// If true, pdf document instance is created here.
+            /// </summary>
             protected bool docIsInternal;
 
             internal InternalExternalBase(string inputPath, CancellationToken token, ILogbook logbook) 
@@ -137,10 +230,20 @@ namespace CX.PdfLib.iText7
 
         }
 
+        /// <summary>
+        /// A worker class for dealing with annotation removals.
+        /// </summary>
         private class AnnotationRemovalWorker : InternalExternalBase<AnnotationRemovalWorker>
         {
             private readonly IEnumerable<string> annotationTitles;
 
+            /// <summary>
+            /// Create a new worker for removing annotations from a pdf documents.
+            /// </summary>
+            /// <param name="annotationTitles">Annotations with any of these titles will be removed.</param>
+            /// <param name="inputPath">File to remove annotations from.</param>
+            /// <param name="token">Cancellation token of the current task.</param>
+            /// <param name="logbook">Logging service.</param>
             internal AnnotationRemovalWorker(IEnumerable<string> annotationTitles,
                 string inputPath, CancellationToken token, ILogbook logbook) : 
                 base(inputPath, token, logbook)
@@ -148,6 +251,13 @@ namespace CX.PdfLib.iText7
                 this.annotationTitles = annotationTitles;
             }
 
+            /// <summary>
+            /// Create a new worker for removing annotations from a pdf documents.
+            /// </summary>
+            /// <param name="annotationTitles">Annotations with any of these titles will be removed.</param>
+            /// <param name="doc">Document to remove annotations from.</param>
+            /// <param name="token">Cancellation token of the current task.</param>
+            /// <param name="logbook">Logging service.</param>
             internal AnnotationRemovalWorker(IEnumerable<string> annotationTitles,
                 PdfDocument doc, CancellationToken token, ILogbook logbook) 
                 : base(doc, token, logbook)
@@ -155,6 +265,9 @@ namespace CX.PdfLib.iText7
                 this.annotationTitles = annotationTitles;
             }
 
+            /// <summary>
+            /// Exection method for removal.
+            /// </summary>
             internal void Remove()
             {
                 if (doc == null)
@@ -190,11 +303,20 @@ namespace CX.PdfLib.iText7
             }
         }
 
+        /// <summary>
+        /// A worker class for flattening redaction annotations in a document.
+        /// </summary>
         private class RedactionFlatteningWorker : WorkerBase<RedactionFlatteningWorker>
         {
             private readonly CancellationToken token;
             private readonly string inputPath;
 
+            /// <summary>
+            /// Create a new worker for flattening redaction annotations.
+            /// </summary>
+            /// <param name="inputPath">File to flatten.</param>
+            /// <param name="token">Cancellation token of the current task.</param>
+            /// <param name="logbook">Logging service.</param>
             internal RedactionFlatteningWorker(string inputPath, CancellationToken token, 
                 ILogbook logbook) : base(logbook) 
             {
@@ -202,6 +324,9 @@ namespace CX.PdfLib.iText7
                 this.inputPath = inputPath;
             }
 
+            /// <summary>
+            /// Internal execution method for flattening the redaction annotations in a document.
+            /// </summary>
             internal void Flatten()
             {
                 string tempFile = IOPath.Combine(IOPath.GetDirectoryName(inputPath), IOPath.GetTempFileName());

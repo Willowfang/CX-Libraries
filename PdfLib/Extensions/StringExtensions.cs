@@ -4,6 +4,11 @@ namespace CX.PdfLib.Extensions
 {
     public static class StringExtensions
     {
+        /// <summary>
+        /// Replace all non-allowed characters in a string.
+        /// </summary>
+        /// <param name="original">String to handle.</param>
+        /// <returns>A string with non-allowed characters replaced with empty characters.</returns>
         public static string ReplaceIllegal(this string original)
         {
             string processed = original.Replace(":", "");
