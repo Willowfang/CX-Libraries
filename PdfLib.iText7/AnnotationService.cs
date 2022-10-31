@@ -1,5 +1,5 @@
-﻿using CX.LoggingLib;
-using CX.PdfLib.Services;
+﻿using WF.LoggingLib;
+using WF.PdfLib.Services;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Annot;
 using iText.Kernel.Pdf.Canvas;
@@ -11,7 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IOPath = System.IO.Path;
 
-namespace CX.PdfLib.iText7
+namespace WF.PdfLib.iText7
 {
     /// <summary>
     /// Default implementation for <see cref="IAnnotationService"/>.

@@ -1,6 +1,6 @@
-﻿using LoggingLib.Defaults;
+﻿using WF.LoggingLib.Defaults;
 
-namespace CX.LoggingLib
+namespace WF.LoggingLib
 {
     /// <summary>
     /// A base class for classes that have logging capabilites.

@@ -1,8 +1,8 @@
-﻿using CX.PdfLib.Services.Data;
+﻿using WF.PdfLib.Services.Data;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CX.PdfLib.Extensions
+namespace WF.PdfLib.Extensions
 {
     public static class IEnumerableExtensions
     {

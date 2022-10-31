@@ -1,6 +1,6 @@
-﻿using CX.LoggingLib;
+﻿using WF.LoggingLib;
 
-namespace CX.Common.Base
+namespace WF.Common.Base
 {
     /// <summary>
     /// An abstract base class for workers performing various tasks with

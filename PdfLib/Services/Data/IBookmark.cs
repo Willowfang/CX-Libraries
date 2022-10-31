@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CX.PdfLib.Services.Data
+namespace WF.PdfLib.Services.Data
 {
     /// <summary>
     /// Interface for a generic bookmark.

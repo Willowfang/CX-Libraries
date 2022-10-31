@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CX.PdfLib.Services;
-using CX.PdfLib.Services.Data;
+using WF.PdfLib.Services;
+using WF.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
-using CX.PdfLib.Extensions;
+using WF.PdfLib.Extensions;
 using System.IO;
-using CX.PdfLib.Common;
+using WF.PdfLib.Common;
 using System.Threading;
 using System.Threading.Tasks;
-using CX.LoggingLib;
+using WF.LoggingLib;
 
-namespace CX.PdfLib.iText7
+namespace WF.PdfLib.iText7
 {
     /// <summary>
     /// Default implementation of <see cref="IExtractionService"/>.

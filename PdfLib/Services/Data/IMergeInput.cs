@@ -1,4 +1,4 @@
-﻿namespace CX.PdfLib.Services.Data
+﻿namespace WF.PdfLib.Services.Data
 {
     /// <summary>
     /// Info on a file or title to be used in a document merge.

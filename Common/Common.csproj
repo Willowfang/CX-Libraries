@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>CX.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
-    <AssemblyName>CodeX-$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>WF.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyName>WF-$(MSBuildProjectName)</AssemblyName>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 

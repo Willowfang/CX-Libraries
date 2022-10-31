@@ -1,4 +1,4 @@
-﻿using CX.PdfLib.Services.Data;
+﻿using WF.PdfLib.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.Common
+namespace WF.PdfLib.Common
 {
     /// <summary>
     /// Event arguments passed when converting to pdf/a.

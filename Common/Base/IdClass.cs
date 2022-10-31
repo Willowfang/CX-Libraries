@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CX.Common.Base
+﻿namespace WF.Common.Base
 {
     /// <summary>
     /// A base class for classes containing an id property and creation date.

@@ -1,11 +1,11 @@
-﻿using CX.PdfLib.Services.Data;
+﻿using WF.PdfLib.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json.Serialization;
 using System.Threading;
 
-namespace CX.PdfLib.Common
+namespace WF.PdfLib.Common
 {
     /// <summary>
     /// Options for merging several documents together.

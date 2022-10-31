@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CX.ZipLib
+namespace WF.ZipLib
 {
     /// <summary>
     /// Service for compressing files into a zip-file.

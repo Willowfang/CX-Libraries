@@ -1,8 +1,8 @@
-﻿using CX.PdfLib.Services.Data;
+﻿using WF.PdfLib.Services.Data;
 using System;
 using System.Collections.Generic;
 
-namespace CX.PdfLib.Common
+namespace WF.PdfLib.Common
 {
     /// <summary>
     /// A class for bookmarks categorised by their level.

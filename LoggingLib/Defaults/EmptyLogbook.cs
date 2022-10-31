@@ -1,7 +1,6 @@
-﻿using CX.LoggingLib;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
-namespace LoggingLib.Defaults
+namespace WF.LoggingLib.Defaults
 {
     /// <summary>
     /// An <see cref="ILogbook"/> that records logs nowhere. Used to fill dependencies requiring logging
@@ -40,7 +39,8 @@ namespace LoggingLib.Defaults
         /// <param name="callerMemberName"><inheritdoc/></param>
         /// <param name="customContent"><inheritdoc/></param>
         public override void Write(string message, LogLevel level, Exception? exception = null,
-            string? callerName = "", [CallerMemberName] string callerMemberName = "", params object[]? customContent) { }
+            string? callerName = "", [CallerMemberName] string callerMemberName = "", params object[]? customContent)
+        { }
     }
 
     /// <summary>

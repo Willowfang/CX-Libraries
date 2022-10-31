@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace CX.LoggingLib
+namespace WF.LoggingLib
 {
     /// <summary>
     /// Logging level for messages.

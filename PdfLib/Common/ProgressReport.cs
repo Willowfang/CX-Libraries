@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.Common
+namespace WF.PdfLib.Common
 {
     /// <summary>
     /// The phase the current operation is currently at.

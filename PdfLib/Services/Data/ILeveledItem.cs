@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.Services.Data
+namespace WF.PdfLib.Services.Data
 {
     /// <summary>
     /// An object that has a property indicating its level in a hierarchy.

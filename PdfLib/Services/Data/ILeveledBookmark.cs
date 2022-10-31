@@ -1,4 +1,4 @@
-﻿namespace CX.PdfLib.Services.Data
+﻿namespace WF.PdfLib.Services.Data
 {
     /// <summary>
     /// A bookmark with information about its level in the bookmark tree.

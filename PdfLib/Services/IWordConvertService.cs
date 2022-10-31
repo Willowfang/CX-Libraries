@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.Services
+namespace WF.PdfLib.Services
 {
     /// <summary>
     /// Service for converting Word-files to pdf.

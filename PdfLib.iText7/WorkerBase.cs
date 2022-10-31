@@ -1,6 +1,6 @@
-﻿using CX.Common.Base;
-using CX.LoggingLib;
-using CX.PdfLib.Common;
+﻿using WF.Common.Base;
+using WF.LoggingLib;
+using WF.PdfLib.Common;
 using iText.Kernel.Pdf;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.iText7
+namespace WF.PdfLib.iText7
 {
     /// <summary>
     /// Base class for task workers.

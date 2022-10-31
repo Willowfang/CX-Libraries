@@ -1,11 +1,11 @@
-﻿using CX.Common.Base;
+﻿using WF.Common.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CX.TaskManagerLib
+namespace WF.TaskManagerLib
 {
     public class TaskPollingSource : IdClass
     {

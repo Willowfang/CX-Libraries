@@ -1,13 +1,13 @@
-﻿using CX.PdfLib.Services;
+﻿using WF.PdfLib.Services;
 using System.IO;
 using iText.Kernel.Pdf;
 using iText.Forms;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
-using CX.LoggingLib;
+using WF.LoggingLib;
 
-namespace CX.PdfLib.iText7
+namespace WF.PdfLib.iText7
 {
     /// <summary>
     /// Default implementation for <see cref="ISigningService"/>.

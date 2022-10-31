@@ -1,8 +1,8 @@
-﻿using CX.PdfLib.Common;
-using CX.PdfLib.Services.Data;
+﻿using WF.PdfLib.Common;
+using WF.PdfLib.Services.Data;
 using System.Collections.Generic;
 
-namespace CX.PdfLib.Extensions
+namespace WF.PdfLib.Extensions
 {
     public static class BookmarkExtensions
     {

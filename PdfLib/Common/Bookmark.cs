@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using CX.PdfLib.Extensions;
-using CX.PdfLib.Services.Data;
+using WF.PdfLib.Extensions;
+using WF.PdfLib.Services.Data;
 
-namespace CX.PdfLib.Common
+namespace WF.PdfLib.Common
 {
     /// <summary>
     /// Base class for bookmarks.

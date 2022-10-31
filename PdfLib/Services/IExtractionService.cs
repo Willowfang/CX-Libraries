@@ -1,12 +1,12 @@
-﻿using CX.PdfLib.Common;
-using CX.PdfLib.Services.Data;
+﻿using WF.PdfLib.Common;
+using WF.PdfLib.Services.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.Services
+namespace WF.PdfLib.Services
 {
     /// <summary>
     /// Service for extracting part of documents.

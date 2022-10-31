@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace CX.PdfLib.Extensions
+namespace WF.PdfLib.Extensions
 {
     public static class StringExtensions
     {

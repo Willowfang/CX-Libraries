@@ -1,12 +1,12 @@
-﻿using CX.LoggingLib;
-using CX.PdfLib.Common;
-using CX.PdfLib.Services;
+﻿using WF.LoggingLib;
+using WF.PdfLib.Common;
+using WF.PdfLib.Services;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PdfLib.PDFTools
+namespace WF.PdfLib.PDFTools
 {
     /// <summary>
     /// A class for performing pdf/a conversions. Implements <see cref="IPdfAConvertService"/>.
@@ -36,7 +36,7 @@ namespace PdfLib.PDFTools
         /// <exception cref="FileNotFoundException">Thrown, if PDF-Tools executable or source directory is 
         /// not found.</exception>
         public async Task<bool> Convert(FileSystemInfo source, DirectoryInfo destinationDirectory,
-            CancellationToken cancellation = default(CancellationToken))
+            CancellationToken cancellation = default)
         {
             if (cancellation.IsCancellationRequested) return true;
 
@@ -97,7 +97,7 @@ namespace PdfLib.PDFTools
                 return false;
             }
 
-            if (processTask.IsFaulted || (process.HasExited && process.ExitCode != 0))
+            if (processTask.IsFaulted || process.HasExited && process.ExitCode != 0)
             {
                 logbook.Write($"PDF Tools process is at faulted state or its exit code is not 0.", LogLevel.Error);
                 return false;

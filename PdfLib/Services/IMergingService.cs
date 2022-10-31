@@ -1,10 +1,10 @@
-﻿using CX.PdfLib.Common;
+﻿using WF.PdfLib.Common;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.Services
+namespace WF.PdfLib.Services
 {
     /// <summary>
     /// Service for merging documents together.

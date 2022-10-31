@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <AssemblyName>CodeX-PdfLib</AssemblyName>
-    <RootNamespace>CX.PdfLib</RootNamespace>
+    <AssemblyName>WF-PdfLib</AssemblyName>
+    <RootNamespace>WF.PdfLib</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

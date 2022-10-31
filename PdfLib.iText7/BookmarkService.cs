@@ -1,16 +1,16 @@
-﻿using CX.LoggingLib;
-using CX.PdfLib.Common;
-using CX.PdfLib.Services;
-using CX.PdfLib.Services.Data;
+﻿using WF.LoggingLib;
+using WF.PdfLib.Common;
+using WF.PdfLib.Services;
+using WF.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Navigation;
-using LoggingLib.Defaults;
+using WF.LoggingLib.Defaults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.iText7
+namespace WF.PdfLib.iText7
 {
     /// <summary>
     /// Default implementation for <see cref="BookmarkService"/>.

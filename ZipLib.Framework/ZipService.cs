@@ -1,5 +1,5 @@
-﻿using CX.Common.Base;
-using CX.LoggingLib;
+﻿using WF.Common.Base;
+using WF.LoggingLib;
 using System;
 using System.Collections.Generic;
 using System.IO.Compression;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CX.ZipLib.Framework
+namespace WF.ZipLib.Framework
 {
     /// <summary>
     /// Implementation for <see cref="IZipService"/>.

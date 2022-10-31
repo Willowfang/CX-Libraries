@@ -1,13 +1,8 @@
-﻿using CX.LoggingLib;
+﻿using WF.LoggingLib;
 using LiteDB;
 using LiteDB.Async;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CX.TaskManagerLib.LiteDB
+namespace WF.TaskManagerLib.LiteDB
 {
     public class TaskManager : LoggingEnabled<TaskManager>, ITaskManager
     {

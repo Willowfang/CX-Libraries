@@ -1,5 +1,5 @@
-﻿using CX.LoggingLib;
-using CX.PdfLib.Services;
+﻿using WF.LoggingLib;
+using WF.PdfLib.Services;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
-namespace CX.PdfLib.iText7
+namespace WF.PdfLib.iText7
 {   
     /// <summary>
     /// Default implementation of <see cref="IWordConvertService"/>.

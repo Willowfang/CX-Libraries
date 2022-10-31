@@ -4,8 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>CodeX-LoggingLib</AssemblyName>
-    <RootNamespace>CX.LoggingLib</RootNamespace>
+    <AssemblyName>WF-LoggingLib</AssemblyName>
+    <RootNamespace>WF.LoggingLib</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 

@@ -1,8 +1,8 @@
-﻿using CX.PdfLib.Services.Data;
+﻿using WF.PdfLib.Services.Data;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.Services
+namespace WF.PdfLib.Services
 {
     /// <summary>
     /// Service for manipulating the bookmarks of a document.

@@ -1,8 +1,8 @@
-﻿using CX.LoggingLib;
-using CX.PdfLib.Common;
-using CX.PdfLib.Extensions;
-using CX.PdfLib.Services;
-using CX.PdfLib.Services.Data;
+﻿using WF.LoggingLib;
+using WF.PdfLib.Common;
+using WF.PdfLib.Extensions;
+using WF.PdfLib.Services;
+using WF.PdfLib.Services.Data;
 using iText.Kernel.Pdf;
 using iText.Kernel.Utils;
 using iText.Layout;
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.iText7
+namespace WF.PdfLib.iText7
 {
     /// <summary>
     /// Default implementation for <see cref="IMergingService"/>.

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CX.PdfLib.Services
+namespace WF.PdfLib.Services
 {
     /// <summary>
     /// Service for dealing with annotations in a pdf document.
