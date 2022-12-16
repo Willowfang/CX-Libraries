@@ -32,6 +32,12 @@ namespace WF.LoggingLib.Defaults
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
+        /// <param name="level"></param>
+        public override void ChangeLevel(LogLevel level) { }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         /// <param name="message"><inheritdoc/></param>
         /// <param name="level"><inheritdoc/></param>
         /// <param name="exception"><inheritdoc/></param>

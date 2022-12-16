@@ -35,6 +35,12 @@ namespace WF.LoggingLib
     public interface ILogbook
     {
         /// <summary>
+        /// Change the logging level of the logger.
+        /// </summary>
+        /// <param name="level"></param>
+        public void ChangeLevel(LogLevel level);
+
+        /// <summary>
         /// Create a typed version of this <see cref="ILogbook"/>. A typed version provides assigned type as 
         /// extra information when writing messages.
         /// </summary>
@@ -60,6 +66,12 @@ namespace WF.LoggingLib
     /// </summary>
     public abstract class Logbook : ILogbook
     {
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="level"></param>
+        public abstract void ChangeLevel(LogLevel level);
+
         /// <summary>
         /// Create a typed <see cref="ILogbook"/> with given type as container. <see cref="TypedLogbook{T}"/> 
         /// provides the name of <typeparamref name="T"/> as extra information when logging.

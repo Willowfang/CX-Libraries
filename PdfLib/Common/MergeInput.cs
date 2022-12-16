@@ -10,7 +10,7 @@ namespace WF.PdfLib.Common
         /// <summary>
         /// Path of the file to merge.
         /// </summary>
-        public string FilePath { get; }
+        public string? FilePath { get; }
 
         /// <summary>
         /// Title of the bookmark to create when merging.
@@ -25,10 +25,10 @@ namespace WF.PdfLib.Common
         /// <summary>
         /// Create a new merge info for merging a document into the final product.
         /// </summary>
-        /// <param name="filePath">Path of the file to merge.</param>
+        /// <param name="filePath">Path of the file to merge. If null, this is a title.</param>
         /// <param name="title">Name to create in the bookmark tree.</param>
         /// <param name="level">Level of this bookmark in the final bookmark tree.</param>
-        public MergeInput(string filePath, string title, int level)
+        public MergeInput(string? filePath, string title, int level)
         {
             FilePath = filePath;
             Title = title;

@@ -7,6 +7,8 @@
     <AssemblyName>WF-LoggingLib</AssemblyName>
     <RootNamespace>WF.LoggingLib</RootNamespace>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>C:\Users\jbjok\OneDrive - O365 Turun yliopisto\Koodaus\Signatures\opusKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 </Project>

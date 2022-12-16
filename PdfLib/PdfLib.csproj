@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>WF-PdfLib</AssemblyName>
     <RootNamespace>WF.PdfLib</RootNamespace>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -14,6 +15,8 @@
   <PropertyGroup>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>C:\Users\jbjok\OneDrive - O365 Turun yliopisto\Koodaus\Signatures\opusKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
 </Project>

@@ -14,10 +14,9 @@ namespace WF.PdfLib.Services
     public interface IExtractionService
     {
         /// <summary>
-        /// Extract bookmarks from documents into one or more new documents.
+        /// Create extraction worker.
         /// </summary>
-        /// <param name="options">Options for extraction.</param>
-        /// <returns>A list of product files.</returns>
-        public Task<IList<FileSystemInfo>> Extract(ExtractionOptions options);
+        /// <returns>The worker.</returns>
+        public IExtractionWorker CreateWorker();
     }
 }

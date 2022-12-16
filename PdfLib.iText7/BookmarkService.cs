@@ -35,7 +35,8 @@ namespace WF.PdfLib.iText7
         /// <returns>A list of all found bookmarks.</returns>
         public async Task<IList<ILeveledBookmark>> FindBookmarks(string sourcePdf)
         {
-            return await Task.Run(() => utilities.FindLeveledBookmarks(new PdfDocument(new PdfReader(sourcePdf))));
+            return await Task.Run(() => utilities.FindLeveledBookmarks(new PdfDocument(new PdfReader(sourcePdf)))) ??
+                new List<ILeveledBookmark>();
         }
 
         /// <summary>

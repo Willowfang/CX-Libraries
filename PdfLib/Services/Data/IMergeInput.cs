@@ -8,7 +8,7 @@
         /// <summary>
         /// Path to the file to merge. Null, if just a title.
         /// </summary>
-        public string FilePath { get; }
+        public string? FilePath { get; }
         /// <summary>
         /// Title of the bookmark to add.
         /// </summary>

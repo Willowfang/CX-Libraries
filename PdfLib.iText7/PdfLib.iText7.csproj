@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>WF-PdfLib-iText7</AssemblyName>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -14,6 +15,8 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<RootNamespace>WF.PdfLib.iText7</RootNamespace>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<SignAssembly>True</SignAssembly>
+		<AssemblyOriginatorKeyFile>C:\Users\jbjok\OneDrive - O365 Turun yliopisto\Koodaus\Signatures\opusKey.snk</AssemblyOriginatorKeyFile>
 	</PropertyGroup>
 
   <ItemGroup>

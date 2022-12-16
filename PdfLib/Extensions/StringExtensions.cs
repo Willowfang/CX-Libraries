@@ -13,6 +13,7 @@ namespace WF.PdfLib.Extensions
         {
             string processed = original.Replace(":", "");
             processed = processed.Replace("/", "-");
+            processed = processed.Replace("\"", "'");
             return string.Join("", processed.Split(Path.GetInvalidFileNameChars()));
         }
     }

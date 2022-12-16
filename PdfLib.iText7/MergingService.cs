@@ -127,7 +127,7 @@ namespace WF.PdfLib.iText7
                 }
                 merger = new PdfMerger(product).SetCloseSourceDocuments(true);
 
-                string dir = string.IsNullOrEmpty(outputPath) ? null : Path.GetDirectoryName(outputPath);
+                string? dir = string.IsNullOrEmpty(outputPath) ? null : Path.GetDirectoryName(outputPath);
                 if (dir != null && Directory.Exists(dir) == false)
                 {
                     Directory.CreateDirectory(dir);
@@ -315,13 +315,21 @@ namespace WF.PdfLib.iText7
 
                     if (current.FilePath != null && Path.GetExtension(current.FilePath).ToLower() == ".pdf")
                     {
-                        IList<ILeveledBookmark> leveledOriginal = await Task.Run(() 
-                            => utilities.FindLeveledBookmarks(new PdfDocument(new PdfReader(current.FilePath)))
-                            .AdjustLevels(current.Level));
+                        IList<ILeveledBookmark>? leveledOriginal = await Task.Run(() => FindAndAdjust(current));
 
-                        bookmarks.AddRange(await Task.Run(() => utilities.AdjustBookmarksMerge(leveledOriginal, startPages[i])));
+                        if (leveledOriginal != null)
+                            bookmarks.AddRange(await Task.Run(() => utilities.AdjustBookmarksMerge(leveledOriginal, startPages[i])));
                     }
                 }
+            }
+
+            private IList<ILeveledBookmark>? FindAndAdjust(IMergeInput current)
+            {
+                IList<ILeveledBookmark>? found = utilities.FindLeveledBookmarks(new PdfDocument(new PdfReader(current.FilePath)));
+
+                if (found == null || found.Count < 1) return null;
+
+                return found.AdjustLevels(current.Level);
             }
 
             private async Task InsertBookmarks()

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\LoggingLib\LoggingLib.csproj" />
     <ProjectReference Include="..\TaskManagerLib\TaskManagerLib.csproj" />
   </ItemGroup>
 

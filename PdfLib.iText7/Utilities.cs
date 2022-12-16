@@ -39,7 +39,7 @@ namespace WF.PdfLib.iText7
         /// <param name="sourceDoc">Document to search.</param>
         /// <param name="closeDocument">If true, close <see cref="PdfDocument"/> instance when done.</param>
         /// <returns></returns>
-        internal IList<ILeveledBookmark> FindLeveledBookmarks(PdfDocument sourceDoc, bool closeDocument = true)
+        internal IList<ILeveledBookmark>? FindLeveledBookmarks(PdfDocument sourceDoc, bool closeDocument = true)
         {
             // Get source document outlines (bookmarks) and a tree of destinations in the document
             PdfNameTree destTree = sourceDoc.GetCatalog().GetNameTree(PdfName.Dests);
@@ -48,7 +48,10 @@ namespace WF.PdfLib.iText7
             logbook.Write("Outlines retrieved.", LogLevel.Debug);
 
             // Get bookmarks with their levels and starting pages
-            IList<ILeveledBookmark> foundBookmarks = GetBookmarks(outlines, destTree.GetNames(), sourceDoc);
+            IList<ILeveledBookmark>? foundBookmarks = GetBookmarks(outlines, destTree.GetNames(), sourceDoc);
+
+            if (foundBookmarks == null || foundBookmarks.Count < 1) return null;
+
             int documentEndPage = sourceDoc.GetNumberOfPages();
             if (closeDocument)
                 sourceDoc.Close();
@@ -214,7 +217,7 @@ namespace WF.PdfLib.iText7
         /// <param name="sourceDocument">Document to look in.</param>
         /// <param name="level">Start at this level.</param>
         /// <returns>Bookmarks.</returns>
-        private IList<ILeveledBookmark> GetBookmarks(PdfOutline outline,
+        private IList<ILeveledBookmark>? GetBookmarks(PdfOutline outline,
             IDictionary<string, PdfObject> sourceNames, PdfDocument sourceDocument, int level = 0)
         {
             if (outline == null) return null;

@@ -5,6 +5,8 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <AssemblyName>WF-$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>WF.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>C:\Users\jbjok\OneDrive - O365 Turun yliopisto\Koodaus\Signatures\opusKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
