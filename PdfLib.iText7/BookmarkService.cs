@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace WF.PdfLib.iText7
 {
@@ -49,6 +50,19 @@ namespace WF.PdfLib.iText7
             PdfDocument product = new PdfDocument(new PdfWriter(documentPath));
             utilities.AddLeveledBookmarks(bookmarks, product);
             product.Close();
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public ILeveledBookmark DocumentAsBookmark(string path)
+        {
+            PdfDocument source = new PdfDocument(new PdfReader(path));
+
+            int pageCount = source.GetNumberOfPages();
+            string title = Path.GetFileNameWithoutExtension(path);
+
+            return new LeveledBookmark(1, title, 1, pageCount);
         }
     }
 }

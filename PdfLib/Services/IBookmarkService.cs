@@ -22,5 +22,12 @@ namespace WF.PdfLib.Services
         /// <param name="bookmarks">Bookmarks to add.</param>
         /// <param name="documentPath">The pdf to add the bookmarks to.</param>
         public void AddBookmarks(IList<ILeveledBookmark> bookmarks, string documentPath);
+
+        /// <summary>
+        /// Return the whole given pdf-document as a bookmark.
+        /// </summary>
+        /// <param name="path">Path to the pdf-document.</param>
+        /// <returns>The document as a bookmark.</returns>
+        public ILeveledBookmark DocumentAsBookmark(string path);
     }
 }
