@@ -199,13 +199,13 @@ namespace WF.PdfLib.iText7.Extraction
             OpenedDocuments.Add(result);
             CreatedPaths.Add(destinationFile);
 
-            /*CopyOutlinesForSingleFile(
+            CopyOutlinesForSingleFile(
                 doc, 
                 result, 
                 file.Extractables, 
                 allPages,
                 Path.GetFileNameWithoutExtension(fileName),
-                groupByFiles);*/
+                groupByFiles);
 
             result.Close();
         }
