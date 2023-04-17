@@ -10,6 +10,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using IOPath = System.IO.Path;
+using WF.PdfLib.Common.Redaction;
+using iText.PdfCleanup;
+using iText.PdfCleanup.Autosweep;
+using iText.Kernel.Colors;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Pdf.Canvas.Parser;
 
 namespace WF.PdfLib.iText7
 {
@@ -144,6 +150,23 @@ namespace WF.PdfLib.iText7
             await Task.Run(() => worker.Remove());
         }
 
+        public async Task CreateRedactions(string inputPath, string outputPath, CancellationToken token, List<IRedactionOption> options)
+        {
+            if (options == null || options.Count == 0) 
+            {
+                throw new ArgumentNullException(nameof(options));
+            }
+
+            RedactionCreationWorker worker = new RedactionCreationWorker(inputPath, outputPath, token, logbook);
+            await Task.Run(() => worker.Redact(options));
+        }
+
+        public async Task ApplyRedactions(string inputPath, string outputPath, CancellationToken token)
+        {
+            RedactionCreationWorker worker = new RedactionCreationWorker(inputPath, outputPath, token, logbook);
+            await Task.Run(() => worker.ApplyOnly());
+        }
+
         /// <summary>
         /// Worker class for performing task with annotation titles.
         /// </summary>
@@ -193,6 +216,117 @@ namespace WF.PdfLib.iText7
                 }
 
                 return results;
+            }
+        }
+
+        private class RedactionCreationWorker : WorkerBase<RedactionCreationWorker>
+        {
+            // Provided in constructor arguments
+            private readonly string inputPath;
+            private readonly string outputPath;
+            private CancellationToken token;
+
+            internal RedactionCreationWorker(
+                string inputPath,
+                string outputPath,
+                CancellationToken token,
+                ILogbook logbook) : base(logbook)
+            {
+                this.inputPath = inputPath;
+                this.outputPath = outputPath;
+                this.token = token;
+            }
+
+            internal void Redact(List<IRedactionOption> options)
+            {
+                string tempFile = GetTempFile();
+                PdfDocument doc = GetPdfDoc(tempFile);
+
+                foreach (IRedactionOption option in options.Where(x => x.Apply))
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        doc.Close();
+                        return;
+                    }
+
+                    RedactAndApply(doc, option);
+                }
+
+                foreach(IRedactionOption option in options.Where(x => x.Apply == false))
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        doc.Close();
+                        return;
+                    }
+
+                    MarkRedactsOnly(doc, option);
+                }
+
+                doc.Close();
+
+                File.Copy(tempFile, outputPath, true);
+                File.Delete(tempFile);
+            }
+
+            internal void ApplyOnly()
+            {
+                string tempFile = GetTempFile();
+                PdfDocument doc = GetPdfDoc(tempFile);
+
+                PdfCleaner.CleanUpRedactAnnotations(doc);
+
+                doc.Close();
+
+                File.Copy(tempFile, outputPath, true);
+                File.Delete(tempFile);
+            }
+
+            private string GetTempFile()
+            {
+                return IOPath.Combine(IOPath.GetDirectoryName(inputPath), IOPath.GetTempFileName());
+            }
+
+            private PdfDocument GetPdfDoc(string tempFile)
+            {
+                PdfDocument doc = new PdfDocument(new PdfReader(inputPath), new PdfWriter(tempFile));
+                OpenedDocuments.Add(doc);
+                CreatedPaths.Add(new FileInfo(tempFile));
+                
+                return doc;
+            }
+
+            private void MarkRedactsOnly(PdfDocument doc, IRedactionOption option)
+            {
+                int pageCount = doc.GetNumberOfPages();
+
+                for (int i = 1; i <= pageCount; i++)
+                {
+                    RegexBasedLocationExtractionStrategy strategy =
+                    new RegexBasedLocationExtractionStrategy(option.GetRegex());
+
+                    PdfCanvasProcessor parser = new PdfCanvasProcessor(strategy);
+
+                    parser.ProcessPageContent(doc.GetPage(i));
+
+                    foreach (IPdfTextLocation loc in strategy.GetResultantLocations().ToList())
+                    {
+                        PdfAnnotation redact = new PdfRedactAnnotation(loc.GetRectangle())
+                            .SetTitle(new PdfString("Opus"))
+                            .Put(PdfName.Subj, PdfName.Redact)
+                            .Put(PdfName.IC, new PdfArray(option.Fill.GetFloat()))
+                            .Put(PdfName.OC, new PdfArray(option.Outline.GetFloat()));
+                        doc.GetPage(i).AddAnnotation(redact);
+                    }
+                }
+            }
+
+            private void RedactAndApply(PdfDocument doc, IRedactionOption option)
+            {
+                ICleanupStrategy strategy = new RegexBasedCleanupStrategy(option.GetRegex())
+                    .SetRedactionColor(new DeviceRgb(option.Fill.GetColor()));
+                PdfCleaner.AutoSweepCleanUp(doc, strategy);
             }
         }
 

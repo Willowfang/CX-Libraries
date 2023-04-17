@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WF.PdfLib.Common.Redaction;
 
 namespace WF.PdfLib.Services
 {
@@ -76,5 +77,16 @@ namespace WF.PdfLib.Services
         /// <param name="token">Cancellation token for the current task.</param>
         /// <returns>An awaitable task.</returns>
         public Task FlattenRedactions(string inputPath, CancellationToken token);
+
+        public Task CreateRedactions(
+            string inputPath,
+            string outputPath,
+            CancellationToken token,
+            List<IRedactionOption> option);
+
+        public Task ApplyRedactions(
+            string inputPath,
+            string outputPath,
+            CancellationToken token);
     }
 }
