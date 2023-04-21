@@ -1,6 +1,7 @@
 ﻿using WF.PdfLib.Common;
 using WF.PdfLib.Services.Data;
 using System.Collections.Generic;
+using WF.PdfLib.Services.Bookmarks;
 
 namespace WF.PdfLib.Extensions
 {
@@ -14,19 +15,14 @@ namespace WF.PdfLib.Extensions
         /// <remarks>Bookmark level cannot be lower than 1. Bookmarks will be adjusted
         /// to level 1, if adjustment would bring it lower. This can be used to level all
         /// bookmarks to level 1.</remarks>
-        /// <returns></returns>
-        public static IList<ILeveledBookmark> AdjustLevels(this IEnumerable<ILeveledBookmark> originals, 
+        public static void AdjustLevels(this IEnumerable<IBookmark> originals, 
             int adjustment)
         {
-            List<ILeveledBookmark> adjusted = new List<ILeveledBookmark>();
-            foreach (ILeveledBookmark bookmark in originals)
+            foreach (IBookmark bookmark in originals)
             {
                 int adjLevel = bookmark.Level + adjustment > 0 ? bookmark.Level + adjustment : 1;
-                adjusted.Add(new LeveledBookmark(adjLevel, bookmark.Title,
-                    bookmark.Pages));
+                bookmark.Level= adjLevel;
             }
-
-            return adjusted;
         }
 
         /// <summary>

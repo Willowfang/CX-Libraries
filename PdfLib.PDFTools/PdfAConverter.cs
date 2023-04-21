@@ -58,18 +58,7 @@ namespace WF.PdfLib.PDFTools
             if (!destinationDirectory.Exists)
                 destinationDirectory.Create();
 
-            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetTempFileName()).TrimEnd('\\');
-            Directory.CreateDirectory(tempDir);
-
-            string commandText = $"/RunTool:showprog=no;showrep=no convertToPDFA \"{source.FullName}\" /Output:folder=\\\"{tempDir}\\\";filename=\\\"%[FileName]\\\";overwrite=yes;showfiles=no";
-
-            foreach (string file in Directory.GetFiles(tempDir))
-            {
-                FileInfo tempFile = new FileInfo(file);
-                tempFile.CopyTo(Path.Combine(destinationDirectory.FullName, tempFile.Name));
-            }
-
-            Directory.Delete(tempDir, true);
+            string commandText = $"/RunTool:showprog=no;showrep=no convertToPDFA \"{source.FullName}\" /Output:folder=\\\"{destinationDirectory.FullName.TrimEnd('\\')}\\\";filename=\\\"%[FileName]\\\";overwrite=yes;showfiles=no";
 
             logbook.Write($"Command: {commandText}", LogLevel.Debug);
 

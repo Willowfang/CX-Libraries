@@ -15,152 +15,61 @@ namespace WF.PdfLib.iText7
     /// </summary>
     public class WordConvertService : LoggingEnabled<WordConvertService>, IWordConvertService
     {
-        /// <summary>
-        /// Create a new implementation instance.
-        /// </summary>
-        /// <param name="logbook">Logging service.</param>
-        public WordConvertService(ILogbook logbook) : base(logbook) { }
+        public WordConvertService(ILogbook logbook): base(logbook) { }
 
-        /// <summary>
-        /// Convert a Word-document to pdf.
-        /// </summary>
-        /// <param name="filePath">File to convert.</param>
-        /// <param name="outputDirectory">Directory to save the converted document in.</param>
-        /// <returns>Path of converted file.</returns>
-        public async Task<string> Convert(string filePath, string outputDirectory)
+        public async Task<List<FileInfo>> Convert(
+            List<WordConvertInput> inputs,
+            DirectoryInfo targetDirectory,
+            CancellationToken token = default)
         {
-            return await Convert(filePath, outputDirectory, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Convert a Word-document to pdf.
-        /// </summary>
-        /// <param name="filePath">Document to convert.</param>
-        /// <param name="outputDirectory">Directory to save the converted document in.</param>
-        /// <param name="token">Cancellation token for the current task.</param>
-        /// <returns>Path of the converted file.</returns>
-        public async Task<string> Convert(string filePath, string outputDirectory, CancellationToken token)
-        {
-            IList<string> result = await Convert(new List<string>() { filePath }, outputDirectory, token);
-            if (result.Count > 0) return result[0];
-
-            else return null;
-        }
-
-        /// <summary>
-        /// Convert Word-documents to pdf.
-        /// </summary>
-        /// <param name="filePaths">Documents to convert.</param>
-        /// <param name="outputDirectory">Directory to save the documents in.</param>
-        /// <returns>Paths of the converted documents.</returns>
-        public async Task<IList<string>> Convert(IList<string> filePaths, string outputDirectory)
-        {
-            return await Convert(filePaths, outputDirectory, CancellationToken.None);
-        }
-
-        /// <summary>
-        /// Convert Word-documents to pdf.
-        /// </summary>
-        /// <param name="filePaths">Files to convert.</param>
-        /// <param name="outputDirectory">Directory to save documents in.</param>
-        /// <param name="token">Cancellation token for the current task.</param>
-        /// <returns>Paths of the converted files.</returns>
-        public async Task<IList<string>> Convert(IList<string> filePaths, string outputDirectory,
-            CancellationToken token)
-        {
-            WordConvertWorker worker = new WordConvertWorker(filePaths, outputDirectory, token, logbook.BaseLogbook);
-            return await Task.Run(() => worker.Convert());
+            WordConvertWorker worker = new WordConvertWorker(token, logbook.BaseLogbook);
+            return await Task.Run(() => worker.Convert(inputs, targetDirectory));
         }
 
         private class WordConvertWorker : WorkerBase<WordConvertWorker>
         {
-            private readonly IList<string> filePaths;
-            private readonly List<string> converted;
-            private readonly CancellationToken token;
-            private string outputDirectory;
-            private Application app;
-
-            internal WordConvertWorker(IList<string> filePaths, string outputDirectory,
-                CancellationToken token, ILogbook logbook) : base(logbook)
+            private CancellationToken token;
+            internal WordConvertWorker(CancellationToken token, ILogbook logbook) : base(logbook)
             {
-                this.filePaths = filePaths;
-                this.outputDirectory = outputDirectory;
                 this.token = token;
-                converted = new List<string>();
+                PrepareCleanUp();
             }
 
-            internal IList<string> Convert()
+            internal List<FileInfo> Convert(List<WordConvertInput> inputs, DirectoryInfo targetDirectory)
             {
-                app = new Application();
+                Application app = new Application();
                 app.Visible = false;
                 app.ScreenUpdating = false;
 
+                if (!targetDirectory.Exists) CreatedPaths.Add(targetDirectory);
+                targetDirectory.Create();
+
                 logbook.Write($"Conversion started with WordApplication '{app.Name}'.", LogLevel.Debug);
 
-                try
-                {
-                    foreach (string inputPath in filePaths)
-                    {
-                        if (string.IsNullOrEmpty(inputPath))
-                        {
-                            converted.Add(inputPath);
-                            continue;
-                        }
-                        if (CheckIfFileDoesNotExistAndCleanUp(inputPath))
-                        {
-                            throw new ArgumentException($"File at {inputPath} does not exist.");
-                        }
-
-                        if (CheckIfCancelledAndCleanUp(token) == true)
-                        {
-                            return converted;
-                        }
-                        ExecuteFileConversion(inputPath);
+                List<FileInfo> outputPaths = new List<FileInfo>();
+                foreach (WordConvertInput input in inputs) {
+                    if (!File.Exists(input.InputPath)
+                        || (Path.GetExtension(input.InputPath).ToLower() != ".doc")
+                            && Path.GetExtension(input.InputPath).ToLower() != ".docx") {
+                        throw new IOException("Not a proper input file.");
                     }
-                }
-                catch (Exception e)
-                {
-                    logbook.Write($"Word conversion failed at {nameof(WordConvertService)}.", LogLevel.Error, e);
-                    CleanUp();
-                    throw;
-                }
-                finally
-                {
-                    app.Quit();
+
+                    string outputPath = Path.Combine(targetDirectory.FullName, input.FileName);
+                    CreatedPaths.Add(new FileInfo(outputPath));
+                    SendConversionToWord(input.InputPath, outputPath, app);
+
+                    outputPaths.Add(new FileInfo(outputPath));
+
+                    if (CheckIfCancelledAndCleanUp(token)) return new List<FileInfo>();
                 }
 
-                return converted;
+                return outputPaths;
             }
 
-            private void ExecuteFileConversion(string inputPath)
+            private void SendConversionToWord(string sourcePath, string outputPath, Application app)
             {
-                string ext = Path.GetExtension(inputPath);
-                if (ext != ".doc" && ext != ".docx")
-                {
-                    converted.Add(inputPath);
-                    return;
-                }
+                if (app == null) return;
 
-                if (outputDirectory == null)
-                    outputDirectory = Path.GetDirectoryName(inputPath);
-
-                if (Directory.Exists(outputDirectory) == false)
-                {
-                    DirectoryInfo outDir = new DirectoryInfo(outputDirectory);
-                    outDir.Create();
-                    CreatedPaths.Add(outDir);
-                }
-
-                string outputPath = Path.Combine(outputDirectory,
-                    Path.GetFileNameWithoutExtension(inputPath) + ".pdf");
-
-                converted.Add(outputPath);
-                CreatedPaths.Add(new FileInfo(outputPath));
-                SendConversionToWord(inputPath, outputPath);
-            }
-
-            private void SendConversionToWord(string sourcePath, string outputPath)
-            {
                 var doc = app.Documents.Open(sourcePath);
                 if (doc != null)
                 {
