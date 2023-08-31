@@ -48,7 +48,7 @@ namespace WF.PdfLib.iText7
             logbook.Write("Outlines retrieved.", LogLevel.Debug);
 
             // Get bookmarks with their levels and starting pages
-            IList<ILeveledBookmark>? foundBookmarks = GetBookmarks(outlines, destTree.GetNames(), sourceDoc);
+            IList<ILeveledBookmark>? foundBookmarks = GetBookmarks(outlines, destTree, sourceDoc);
 
             if (foundBookmarks == null || foundBookmarks.Count < 1) return null;
 
@@ -218,7 +218,7 @@ namespace WF.PdfLib.iText7
         /// <param name="level">Start at this level.</param>
         /// <returns>Bookmarks.</returns>
         private IList<ILeveledBookmark>? GetBookmarks(PdfOutline outline,
-            IDictionary<string, PdfObject> sourceNames, PdfDocument sourceDocument, int level = 0)
+            PdfNameTree sourceNames, PdfDocument sourceDocument, int level = 0)
         {
             if (outline == null) return null;
 
